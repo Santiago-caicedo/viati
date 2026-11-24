@@ -1,0 +1,51 @@
+{% extends "panel/base.html" %}
+{% block title %}Envíos{% endblock %}
+{% block seccion_tag %}Configuración{% endblock %}
+{% block heading %}Envíos{% endblock %}
+
+{% block content %}
+<form method="post" class="space-y-6" novalidate>
+  {% csrf_token %}
+  <section class="rounded-2xl bg-blanco p-5 shadow-sm">
+    <h2 class="font-titulo text-lg font-bold text-verde-oscuro">Envío gratis</h2>
+    <div class="mt-3 max-w-sm">{% include "panel/_campo.html" with field=config_form.free_shipping_from %}</div>
+  </section>
+
+  <section class="rounded-2xl bg-blanco p-5 shadow-sm">
+    <h2 class="font-titulo text-lg font-bold text-verde-oscuro">Tarifas por peso</h2>
+    <p class="mt-1 text-sm text-texto-claro">
+      Al cotizar se usa primero la tarifa del <strong>departamento</strong> del cliente; si no hay, la de su <strong>zona</strong>
+      (Local = Bogotá D.C., Nacional = resto del país). Si el pedido pesa más que todos los rangos, se usa el rango más alto.
+    </p>
+    {{ tarifas.management_form }}
+    {% if tarifas.non_form_errors %}<p class="mt-2 text-sm font-bold text-naranja-oscuro">{{ tarifas.non_form_errors|join:" " }}</p>{% endif %}
+    <div class="mt-4 overflow-x-auto">
+      <table class="w-full min-w-[820px] text-sm">
+        <thead><tr class="text-left font-nav text-[11px] uppercase tracking-wider text-texto-claro">
+          <th class="pb-2 pr-2">Zona</th><th class="pb-2 pr-2">Departamento</th><th class="pb-2 pr-2">Desde (g)</th><th class="pb-2 pr-2">Hasta (g)</th><th class="pb-2 pr-2">Precio (COP)</th><th class="pb-2 pr-2">Activa</th><th class="pb-2">Borrar</th>
+        </tr></thead>
+        <tbody class="divide-y divide-beige/40">
+          {% for f in tarifas %}
+          <tr class="align-top">
+            {% for hidden in f.hidden_fields %}{{ hidden }}{% endfor %}
+            <td class="py-2 pr-2">{{ f.zona }}</td>
+            <td class="py-2 pr-2">{{ f.departamento }}</td>
+            <td class="py-2 pr-2">{{ f.min_g }}</td>
+            <td class="py-2 pr-2">{{ f.max_g }}</td>
+            <td class="py-2 pr-2">{{ f.price }}</td>
+            <td class="py-2 pr-2 text-center">{{ f.active }}</td>
+            <td class="py-2">{% if f.instance.pk %}{{ f.DELETE }}{% endif %}</td>
+          </tr>
+          {% if f.errors %}<tr><td colspan="7" class="pb-2 text-xs font-bold text-naranja-oscuro">{% for campo, errores in f.errors.items %}{{ errores|join:" " }} {% endfor %}</td></tr>{% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-2 text-xs text-texto-claro">La última fila vacía sirve para agregar una tarifa nueva.</p>
+  </section>
+
+  <div class="flex justify-end">
+    <button type="submit" class="rounded-full bg-naranja px-8 py-3 font-nav text-sm font-bold uppercase tracking-wider text-blanco shadow-md hover:bg-naranja-hover transition-colors">Guardar cambios</button>
+  </div>
+</form>
+{% endblock %}

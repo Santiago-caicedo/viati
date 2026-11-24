@@ -1,0 +1,114 @@
+{% load viati %}<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;font-family:Helvetica,Arial,sans-serif;background:#fcf9f4">
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(41,62,49,0.08)">
+          <tr>
+            <td style="background:#293e31;padding:30px 40px">
+              <h1 style="font-family:Georgia,serif;color:#ffffff;font-size:22px;margin:0">
+                🛍️ Nuevo Pedido: {{ order.number }}
+              </h1>
+              <p style="color:#f0eeb6;font-size:11px;text-transform:uppercase;letter-spacing:2px;margin:6px 0 0">
+                Viati Café — Nueva Venta
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:30px 40px">
+              <h2 style="font-size:14px;text-transform:uppercase;letter-spacing:1px;color:#d57223;border-bottom:2px solid #ece8e3;padding-bottom:10px;margin-bottom:20px;">Datos del Cliente</h2>
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
+                <tr>
+                  <td style="padding:0 0 10px 0;" valign="top">
+                    <span style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#a0ada7;font-weight:600">Nombre</span>
+                    <p style="margin:4px 0 0;font-size:16px;color:#414141">{{ order.full_name }}</p>
+                  </td>
+                  <td style="padding:0 0 10px 0;" valign="top">
+                    <span style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#a0ada7;font-weight:600">Email</span>
+                    <p style="margin:4px 0 0;font-size:16px;color:#414141">{{ order.email }}</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0 0 10px 0;" valign="top">
+                    <span style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#a0ada7;font-weight:600">Celular</span>
+                    <p style="margin:4px 0 0;font-size:16px;color:#414141">{{ order.phone }}</p>
+                  </td>
+                  <td style="padding:0 0 10px 0;" valign="top">
+                    <span style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#a0ada7;font-weight:600">Documento</span>
+                    <p style="margin:4px 0 0;font-size:16px;color:#414141">{{ order.document_type }} {{ order.document }}</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="padding:10px 0 0 0; border-top: 1px solid #ece8e3;">
+                    <span style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#a0ada7;font-weight:600">Dirección de Envío</span>
+                    <p style="margin:4px 0 0;font-size:15px;color:#414141;line-height:1.5;">
+                      {{ order.address }}{% if order.address2 %}<br>{{ order.address2 }}{% endif %}<br>
+                      {{ order.city }}, {{ order.department }}<br>
+                      Colombia
+                    </p>
+                  </td>
+                </tr>
+                {% if order.notes %}
+                <tr>
+                  <td colspan="2" style="padding:10px 0 0 0; border-top: 1px solid #ece8e3;">
+                    <span style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#a0ada7;font-weight:600">Notas del cliente</span>
+                    <p style="margin:4px 0 0;font-size:15px;color:#414141;line-height:1.5;">{{ order.notes|linebreaksbr }}</p>
+                  </td>
+                </tr>
+                {% endif %}
+              </table>
+
+              <h2 style="font-size:14px;text-transform:uppercase;letter-spacing:1px;color:#d57223;border-bottom:2px solid #ece8e3;padding-bottom:10px;margin-bottom:15px;">Productos</h2>
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
+                {% for item in items %}
+                <tr>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #ece8e3;">
+                    <p style="margin: 0; font-size: 14px; color: #414141; font-weight: bold;">
+                      {{ item.qty }}x {{ item.product_name }}
+                      {% if item.size %}<br><small style="color: #666;">Tamaño: {{ item.size }}</small>{% endif %}
+                      {% if item.grind %}<br><small style="color: #666;">Molienda: {{ item.grind }}</small>{% endif %}
+                    </p>
+                  </td>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #ece8e3; text-align: right;">
+                    <p style="margin: 0; font-size: 14px; color: #414141;">{{ item.total|cop }}</p>
+                  </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #ece8e3;">
+                    <p style="margin: 0; font-size: 14px; color: #414141;">Envío ({{ order.total_weight }} g)</p>
+                  </td>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #ece8e3; text-align: right;">
+                    <p style="margin: 0; font-size: 14px; color: #414141;">{% if order.shipping %}{{ order.shipping|cop }}{% else %}Gratis{% endif %}</p>
+                  </td>
+                </tr>
+              </table>
+
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="right" style="padding-top: 20px; border-top: 2px solid #293e31;">
+                    <span style="font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:#a0ada7;font-weight:bold;margin-right:15px;">Total Pagado:</span>
+                    <span style="font-size:24px;font-weight:bold;color:#293e31;">{{ order.total|cop }}</span>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:20px 0 0;font-size:12px;color:#a0ada7;">
+                Pago Mercado Pago #{{ order.mp_payment_id }} · {{ order.paid_at|date:"d/m/Y H:i" }}
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="background:#f6f3ee;padding:20px 40px">
+              <p style="margin:0;font-size:12px;color:#a0ada7;text-align:center">
+                Notificación automática de la tienda Viati Café (Mercado Pago)
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

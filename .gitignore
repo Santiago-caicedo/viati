@@ -1,0 +1,31 @@
+# Entorno de Python y dependencias de Node
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+
+# Configuración privada: NUNCA subir (claves, contraseñas). Sí se sube .env.example.
+.env
+.env.*
+!.env.example
+*.bak
+
+# Base de datos local y copias (tienen datos de clientes)
+*.sqlite3
+
+# Archivos generados o subidos
+media/
+staticfiles/
+tmp_emails/
+.odoo-cache/
+
+# Editor / sistema
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Herramientas de Node (solo para recompilar el CSS; no hacen parte del despliegue)
+package.json
+package-lock.json
+tailwind/

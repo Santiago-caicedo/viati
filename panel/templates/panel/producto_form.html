@@ -1,0 +1,99 @@
+{% extends "panel/base.html" %}
+{% block title %}{% if product.pk %}{{ product.name }}{% else %}Nuevo producto{% endif %}{% endblock %}
+{% block seccion_tag %}<a href="{% url 'panel:productos' %}" class="hover:underline">← Productos</a>{% endblock %}
+{% block heading %}{% if product.pk %}Editar «{{ product.name }}»{% else %}Nuevo producto{% endif %}{% endblock %}
+
+{% block content %}
+{% if desde_odoo %}
+<div class="mb-6 rounded-xl bg-crema px-4 py-3 text-sm text-marron" role="status">
+  Este producto viene de <strong>Odoo</strong>: nombre, precio, descripción y foto se sobrescriben en la próxima sincronización. Cámbialos en Odoo.
+</div>
+{% endif %}
+
+<form method="post" enctype="multipart/form-data" class="grid gap-6 lg:grid-cols-3" novalidate>
+  {% csrf_token %}
+  {% if form.non_field_errors %}<div class="lg:col-span-3 rounded-xl bg-naranja-oscuro px-4 py-3 text-sm text-blanco" role="alert">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+
+  <div class="space-y-6 lg:col-span-2">
+    <section class="space-y-4 rounded-2xl bg-blanco p-5 shadow-sm">
+      <h2 class="font-titulo text-lg font-bold text-verde-oscuro">Información</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        {% include "panel/_campo.html" with field=form.name %}
+        {% include "panel/_campo.html" with field=form.slug %}
+        {% include "panel/_campo.html" with field=form.category %}
+        {% include "panel/_campo.html" with field=form.origin %}
+      </div>
+      {% include "panel/_campo.html" with field=form.description %}
+    </section>
+
+    <section class="space-y-4 rounded-2xl bg-blanco p-5 shadow-sm">
+      <h2 class="font-titulo text-lg font-bold text-verde-oscuro">Precio y tamaños</h2>
+      <p class="text-sm text-texto-claro">Si el producto tiene tamaños (350 g, 500 g…), cada tamaño tiene su propio precio y peso. Si no, usa el precio y el peso de abajo.</p>
+
+      {{ tamanos.management_form }}
+      {% if tamanos.non_form_errors %}<p class="text-sm font-bold text-naranja-oscuro">{{ tamanos.non_form_errors|join:" " }}</p>{% endif %}
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[520px] text-sm">
+          <thead><tr class="text-left font-nav text-[11px] uppercase tracking-wider text-texto-claro">
+            <th class="pb-2 pr-2">Tamaño</th><th class="pb-2 pr-2">Precio (COP)</th><th class="pb-2 pr-2">Peso (g)</th><th class="pb-2 pr-2 w-20">Orden</th><th class="pb-2">Quitar</th>
+          </tr></thead>
+          <tbody>
+            {% for f in tamanos %}
+            <tr class="align-top">
+              {% for hidden in f.hidden_fields %}{{ hidden }}{% endfor %}
+              <td class="py-1 pr-2">{{ f.name }}{% for e in f.name.errors %}<p class="text-xs text-naranja-oscuro">{{ e }}</p>{% endfor %}</td>
+              <td class="py-1 pr-2">{{ f.price }}{% for e in f.price.errors %}<p class="text-xs text-naranja-oscuro">{{ e }}</p>{% endfor %}</td>
+              <td class="py-1 pr-2">{{ f.weight }}{% for e in f.weight.errors %}<p class="text-xs text-naranja-oscuro">{{ e }}</p>{% endfor %}</td>
+              <td class="py-1 pr-2">{{ f.order }}</td>
+              <td class="py-1">{% if f.instance.pk %}<label class="inline-flex items-center gap-1.5 text-xs">{{ f.DELETE }} Quitar</label>{% endif %}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-texto-claro">La última fila vacía sirve para agregar un tamaño nuevo. Guarda y aparecerá otra.</p>
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        {% include "panel/_campo.html" with field=form.price %}
+        {% include "panel/_campo.html" with field=form.weight %}
+      </div>
+      <fieldset class="space-y-2">
+        <legend class="font-nav text-[11px] font-bold uppercase tracking-wider text-verde-oscuro">{{ form.grind_options.label }}</legend>
+        <div class="flex flex-wrap gap-4 text-sm">{% for c in form.grind_options %}<label class="inline-flex items-center gap-2">{{ c.tag }} {{ c.choice_label }}</label>{% endfor %}</div>
+        <p class="text-xs text-texto-claro">{{ form.grind_options.help_text }}</p>
+      </fieldset>
+    </section>
+
+    <section class="grid gap-6 rounded-2xl bg-blanco p-5 shadow-sm sm:grid-cols-2">
+      <fieldset>
+        <legend class="font-nav text-[11px] font-bold uppercase tracking-wider text-verde-oscuro">Productos sugeridos</legend>
+        <p class="text-xs text-texto-claro">Se ofrecen en la ficha de este producto.</p>
+        <div class="mt-2 max-h-56 space-y-1.5 overflow-y-auto text-sm">{% for c in form.optional_products %}<label class="flex items-center gap-2">{{ c.tag }} {{ c.choice_label }}</label>{% empty %}<p class="text-texto-claro">No hay otros productos.</p>{% endfor %}</div>
+      </fieldset>
+      <fieldset>
+        <legend class="font-nav text-[11px] font-bold uppercase tracking-wider text-verde-oscuro">Accesorios</legend>
+        <p class="text-xs text-texto-claro">Productos complementarios (cucharas, kits…).</p>
+        <div class="mt-2 max-h-56 space-y-1.5 overflow-y-auto text-sm">{% for c in form.accessory_products %}<label class="flex items-center gap-2">{{ c.tag }} {{ c.choice_label }}</label>{% empty %}<p class="text-texto-claro">No hay otros productos.</p>{% endfor %}</div>
+      </fieldset>
+    </section>
+  </div>
+
+  <div class="space-y-6">
+    <section class="space-y-4 rounded-2xl bg-blanco p-5 shadow-sm">
+      <h2 class="font-titulo text-lg font-bold text-verde-oscuro">Foto</h2>
+      {% if product.pk %}<img src="{{ product.image_url }}" alt="" class="aspect-square w-full rounded-xl bg-off-white object-contain">{% endif %}
+      {% include "panel/_campo.html" with field=form.image_upload %}
+    </section>
+    <section class="space-y-3 rounded-2xl bg-blanco p-5 shadow-sm">
+      <h2 class="font-titulo text-lg font-bold text-verde-oscuro">Publicación</h2>
+      {% include "panel/_campo.html" with field=form.active %}
+      {% include "panel/_campo.html" with field=form.featured %}
+      {% include "panel/_campo.html" with field=form.order %}
+    </section>
+    <div class="sticky bottom-4 flex gap-2">
+      <button type="submit" class="flex-1 rounded-full bg-naranja px-6 py-3 font-nav text-sm font-bold uppercase tracking-wider text-blanco shadow-md hover:bg-naranja-hover transition-colors">Guardar</button>
+      <a href="{% url 'panel:productos' %}" class="rounded-full border border-beige bg-blanco px-5 py-3 font-nav text-sm font-bold uppercase tracking-wider text-verde-oscuro hover:border-naranja">Cancelar</a>
+    </div>
+  </div>
+</form>
+{% endblock %}

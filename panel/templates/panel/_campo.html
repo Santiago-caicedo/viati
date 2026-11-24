@@ -1,0 +1,13 @@
+{# Campo de formulario del panel. Uso: include "panel/_campo.html" with field=form.x #}
+<div class="space-y-1.5{% if class %} {{ class }}{% endif %}">
+  {% if field.field.widget.input_type == "checkbox" %}
+    <label class="flex items-center gap-2.5 text-sm text-texto cursor-pointer">{{ field }} {{ field.label }}</label>
+  {% else %}
+    <label for="{{ field.id_for_label }}" class="block font-nav text-[11px] font-bold uppercase tracking-wider text-verde-oscuro">
+      {{ field.label }}{% if field.field.required %}<span class="text-naranja-oscuro" aria-hidden="true"> *</span>{% endif %}
+    </label>
+    {{ field }}
+  {% endif %}
+  {% if field.help_text %}<p class="text-xs text-texto-claro">{{ field.help_text }}</p>{% endif %}
+  {% for error in field.errors %}<p class="text-xs font-bold text-naranja-oscuro">{{ error }}</p>{% endfor %}
+</div>

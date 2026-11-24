@@ -1,0 +1,61 @@
+{% extends "panel/base.html" %}
+{% load viati %}
+{% block title %}Pedidos{% endblock %}
+{% block seccion_tag %}Ventas{% endblock %}
+{% block heading %}Pedidos{% endblock %}
+{% block acciones %}
+<a href="{% url 'panel:pedidos_csv' %}{% if params %}?{{ params }}{% endif %}" class="rounded-full border border-verde-oscuro px-4 py-2 font-nav text-xs font-bold uppercase tracking-wider text-verde-oscuro hover:bg-verde-oscuro hover:text-crema transition-colors">⬇ Exportar a Excel (CSV)</a>
+{% endblock %}
+
+{% block content %}
+{# Accesos rápidos #}
+<div class="mb-5 flex flex-wrap gap-2 text-sm">
+  <a href="?estado=pagado" class="rounded-full bg-melon px-3.5 py-1.5 font-bold text-rojo-vino">● Por enviar: {{ conteo.pagado }}</a>
+  <a href="?estado=en_proceso" class="rounded-full bg-crema px-3.5 py-1.5 font-bold text-marron">◐ Pago en proceso: {{ conteo.en_proceso }}</a>
+  <a href="?estado=pendiente" class="rounded-full bg-surface-dim px-3.5 py-1.5 font-bold text-texto">○ Sin pagar: {{ conteo.pendiente }}</a>
+  {% if params %}<a href="{% url 'panel:pedidos' %}" class="rounded-full border border-beige px-3.5 py-1.5 text-texto hover:border-naranja">✕ Quitar filtros</a>{% endif %}
+</div>
+
+{# Filtros #}
+<form method="get" class="grid gap-3 rounded-2xl bg-blanco p-4 shadow-sm md:grid-cols-2 xl:grid-cols-[2fr_1fr_1fr_1fr_1fr_auto] xl:items-end">
+  {% include "panel/_campo.html" with field=filtro.q %}
+  {% include "panel/_campo.html" with field=filtro.estado %}
+  {% include "panel/_campo.html" with field=filtro.departamento %}
+  {% include "panel/_campo.html" with field=filtro.desde %}
+  {% include "panel/_campo.html" with field=filtro.hasta %}
+  <button type="submit" class="rounded-full bg-verde-oscuro px-5 py-2.5 font-nav text-xs font-bold uppercase tracking-wider text-crema hover:bg-naranja transition-colors">Filtrar</button>
+</form>
+
+<p class="mt-5 text-sm text-texto-claro">{{ total }} pedido{{ total|pluralize }}</p>
+
+<div class="mt-2 overflow-x-auto rounded-2xl bg-blanco shadow-sm">
+  <table class="w-full min-w-[760px] text-sm">
+    <thead class="bg-crema/40"><tr class="text-left font-nav text-[11px] uppercase tracking-wider text-verde-oscuro">
+      <th class="px-4 py-3">Pedido</th><th class="px-4 py-3">Fecha</th><th class="px-4 py-3">Cliente</th><th class="px-4 py-3">Destino</th>
+      <th class="px-4 py-3 text-right">Total</th><th class="px-4 py-3">Estado</th>
+    </tr></thead>
+    <tbody class="divide-y divide-beige/50">
+      {% for o in pagina %}
+      <tr class="hover:bg-off-white">
+        <td class="px-4 py-3 whitespace-nowrap"><a href="{% url 'panel:pedido' o.pk %}" class="font-bold text-verde-oscuro underline decoration-naranja/40 hover:text-naranja-oscuro">{{ o.number }}</a></td>
+        <td class="px-4 py-3 whitespace-nowrap">{{ o.created_at|date:"j M Y, g:i a" }}</td>
+        <td class="px-4 py-3">{{ o.full_name }}<br><span class="text-xs text-texto-claro">{{ o.email }}</span></td>
+        <td class="px-4 py-3">{{ o.city }}<br><span class="text-xs text-texto-claro">{{ o.department }}</span></td>
+        <td class="px-4 py-3 text-right tabular-nums">{{ o.total|cop }}</td>
+        <td class="px-4 py-3">{% include "panel/_estado.html" with o=o %}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="px-4 py-10 text-center text-texto-claro">No hay pedidos con estos filtros.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if pagina.paginator.num_pages > 1 %}
+<nav class="mt-5 flex items-center justify-between text-sm" aria-label="Páginas">
+  {% if pagina.has_previous %}<a href="?{% if params %}{{ params }}&{% endif %}pagina={{ pagina.previous_page_number }}" class="rounded-full border border-beige px-4 py-2 hover:border-naranja">← Anterior</a>{% else %}<span></span>{% endif %}
+  <span class="text-texto-claro">Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}</span>
+  {% if pagina.has_next %}<a href="?{% if params %}{{ params }}&{% endif %}pagina={{ pagina.next_page_number }}" class="rounded-full border border-beige px-4 py-2 hover:border-naranja">Siguiente →</a>{% else %}<span></span>{% endif %}
+</nav>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,73 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es" class="h-full antialiased">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#293E31">
+  <meta name="color-scheme" content="light">
+  <title>{% block title %}Panel{% endblock %} · Viati Café</title>
+  <link rel="icon" href="{% static 'images/logo-naranja.ico' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:wght@400;700&family=Source+Serif+4:wght@600;700&display=swap">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  {% block head %}{% endblock %}
+</head>
+<body class="min-h-full bg-off-white font-cuerpo text-texto">
+{% block body %}
+<div class="min-h-screen lg:flex">
+
+  {# ── Barra lateral (escritorio) / superior (móvil) ── #}
+  <aside class="bg-verde-oscuro text-crema lg:w-64 lg:shrink-0 lg:min-h-screen lg:sticky lg:top-0 lg:h-screen flex flex-col">
+    <div class="flex items-center justify-between gap-3 px-4 py-3 lg:px-5 lg:py-5">
+      <a href="{% url 'panel:inicio' %}" class="flex items-center gap-2.5 bg-crema rounded-2xl py-1.5 pl-1.5 pr-4">
+        <img src="{% static 'images/logo.png' %}" alt="" width="40" height="40" class="w-10 h-10 rounded-full object-contain">
+        <span class="flex flex-col leading-tight">
+          <span class="font-titulo font-bold uppercase tracking-wide text-verde-oscuro text-sm">Viati Café</span>
+          <span class="font-nav uppercase tracking-widest text-naranja-oscuro text-[10px] font-bold">Panel de gestión</span>
+        </span>
+      </a>
+      <details class="lg:hidden group relative">
+        <summary class="list-none cursor-pointer rounded-full border border-crema/30 px-4 py-2 font-nav text-xs font-bold uppercase tracking-wider">Menú</summary>
+        <div class="absolute right-0 mt-2 w-60 rounded-2xl bg-verde-header p-2 shadow-xl z-50">
+          {% include "panel/_nav.html" %}
+        </div>
+      </details>
+    </div>
+    <nav class="hidden lg:flex flex-col flex-1 px-3" aria-label="Secciones del panel">
+      {% include "panel/_nav.html" %}
+    </nav>
+    <div class="hidden lg:block px-5 py-4 text-xs text-crema/60">
+      <a href="/" target="_blank" rel="noopener" class="hover:text-naranja">Ver la tienda ↗</a>
+    </div>
+  </aside>
+
+  {# ── Contenido ── #}
+  <div class="flex-1 min-w-0">
+    <header class="flex flex-wrap items-center justify-between gap-3 border-b border-beige/60 bg-blanco px-4 py-4 md:px-8">
+      <div>
+        <p class="font-nav text-[11px] font-bold uppercase tracking-[0.15em] text-naranja-oscuro">{% block seccion_tag %}Panel{% endblock %}</p>
+        <h1 class="font-titulo text-2xl md:text-3xl font-bold text-verde-oscuro">{% block heading %}{% endblock %}</h1>
+      </div>
+      <div class="flex items-center gap-3">{% block acciones %}{% endblock %}</div>
+    </header>
+
+    <main id="contenido" class="px-4 py-6 md:px-8 md:py-8 max-w-[1280px]">
+      {% if messages %}
+      <div class="mb-6 space-y-2" aria-live="polite">
+        {% for m in messages %}
+        <div class="flex items-start gap-3 rounded-xl px-4 py-3 text-sm {% if m.tags == 'error' %}bg-naranja-oscuro text-blanco{% else %}bg-verde-oscuro text-crema{% endif %}" role="{% if m.tags == 'error' %}alert{% else %}status{% endif %}">
+          <span aria-hidden="true">{% if m.tags == 'error' %}⚠️{% else %}✓{% endif %}</span><span>{{ m }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}{% endblock %}
+</body>
+</html>

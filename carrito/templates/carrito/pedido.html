@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% load viati %}
+
+{% block title %}Pedido {{ order.number }} — Viati Café{% endblock %}
+{% block description %}Estado de tu pedido de Viati Café.{% endblock %}
+{% block head %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<section class="py-14 md:py-20 bg-off-white" data-order data-order-status="{{ order.status }}"
+         data-estado-url="/pedido/{{ order.token }}/estado" data-order-token="{{ order.token }}">
+  <div class="container-viati max-w-3xl">
+
+    {# ── Encabezado según el estado ── #}
+    <div class="bg-blanco rounded-2xl border border-beige/40 shadow-sm p-8 md:p-12 text-center">
+      {% if order.is_paid %}
+        <span class="mx-auto mb-6 w-16 h-16 rounded-full bg-verde-oscuro text-crema flex items-center justify-center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg>
+        </span>
+        <span class="section-tag">Pedido {{ order.number }}</span>
+        <h1 class="font-titulo font-bold text-verde-oscuro text-3xl md:text-4xl mb-4">¡Gracias por tu compra!</h1>
+        <p class="font-cuerpo text-texto/80 max-w-lg mx-auto">
+          {% if order.status == "enviado" %}Tu pedido ya va en camino.{% else %}Recibimos tu pago y ya estamos preparando tu café.{% endif %}
+          Te enviamos la confirmación a <strong class="text-verde-oscuro">{{ order.email }}</strong>.
+          Los envíos nacionales tardan de 2 a 5 días hábiles.
+        </p>
+      {% elif order.is_waiting %}
+        <span class="mx-auto mb-6 w-16 h-16 rounded-full bg-surface-container flex items-center justify-center" aria-hidden="true">
+          <span class="w-8 h-8 rounded-full border-[3px] border-beige border-t-naranja animate-spin" data-waiting-spinner></span>
+        </span>
+        <span class="section-tag">Pedido {{ order.number }}</span>
+        <h1 class="font-titulo font-bold text-verde-oscuro text-3xl md:text-4xl mb-4">Estamos confirmando tu pago</h1>
+        <p class="font-cuerpo text-texto/80 max-w-lg mx-auto" data-waiting-text aria-live="polite">
+          {% if order.status == "en_proceso" %}Mercado Pago está procesando tu pago. Esto puede tardar unos minutos (PSE o efectivo pueden tardar más).{% else %}Si ya pagaste, en unos segundos verás la confirmación aquí.{% endif %}
+          Te avisaremos por correo cuando se confirme.
+        </p>
+        <p class="font-cuerpo text-sm text-texto-claro mt-4" data-waiting-timeout hidden>
+          Aún no tenemos confirmación. Puedes cerrar esta página: te escribiremos a <strong>{{ order.email }}</strong> cuando Mercado Pago confirme el pago.
+        </p>
+      {% elif order.status == "rechazado" %}
+        <span class="mx-auto mb-6 w-16 h-16 rounded-full bg-naranja-oscuro text-blanco flex items-center justify-center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+        </span>
+        <span class="section-tag">Pedido {{ order.number }}</span>
+        <h1 class="font-titulo font-bold text-verde-oscuro text-3xl md:text-4xl mb-4">Tu pago no fue aprobado</h1>
+        <p class="font-cuerpo text-texto/80 max-w-lg mx-auto">
+          Mercado Pago rechazó el pago. No se realizó ningún cobro. Puedes intentarlo de nuevo con otro medio de pago.
+        </p>
+      {% else %}
+        <span class="section-tag">Pedido {{ order.number }}</span>
+        <h1 class="font-titulo font-bold text-verde-oscuro text-3xl md:text-4xl mb-4">Pedido cancelado</h1>
+        <p class="font-cuerpo text-texto/80 max-w-lg mx-auto">Este pedido fue cancelado o reembolsado. Si tienes dudas escríbenos por WhatsApp.</p>
+      {% endif %}
+
+      {% if error %}
+      <div class="mt-6 p-4 rounded-xl bg-naranja-oscuro text-blanco font-cuerpo text-sm" role="alert">{{ error }}</div>
+      {% endif %}
+
+      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+        {% if order.status == "pendiente" or order.status == "rechazado" %}
+        <form method="post" action="/pedido/{{ order.token }}/reintentar">
+          {% csrf_token %}
+          <button type="submit" class="px-10 py-4 bg-naranja text-blanco font-nav text-sm font-bold uppercase tracking-wider rounded-full hover:bg-naranja-hover active:scale-[0.98] shadow-lg shadow-naranja/30 transition-all">
+            {% if order.status == "rechazado" %}Reintentar pago{% else %}Pagar ahora{% endif %}
+          </button>
+        </form>
+        {% endif %}
+        {% if order.is_paid %}
+        <a href="/tienda" class="px-10 py-4 bg-naranja text-blanco font-nav text-sm font-bold uppercase tracking-wider rounded-full hover:bg-naranja-hover shadow-lg shadow-naranja/30 transition-all">Seguir comprando</a>
+        {% endif %}
+        <a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer"
+           class="px-8 py-3.5 border border-verde-oscuro text-verde-oscuro font-nav text-sm font-bold uppercase tracking-wider rounded-full hover:bg-verde-oscuro/5 transition-viati">
+          Ayuda por WhatsApp
+        </a>
+      </div>
+    </div>
+
+    {# ── Resumen ── #}
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_260px] gap-6">
+      <div class="bg-blanco rounded-2xl border border-beige/40 shadow-sm overflow-hidden">
+        <h2 class="px-6 pt-6 font-titulo font-bold text-verde-oscuro text-xl">Resumen</h2>
+        <ul class="px-6 divide-y divide-beige/60">
+          {% for item in items %}
+          <li class="flex justify-between gap-4 py-4">
+            <div class="min-w-0">
+              <p class="font-cuerpo font-bold text-verde-oscuro">{{ item.qty }}× {{ item.product_name }}</p>
+              {% if item.options_label %}<p class="font-nav text-[11px] uppercase tracking-wider text-texto-claro mt-0.5">{{ item.options_label }}</p>{% endif %}
+            </div>
+            <p class="font-nav text-sm font-bold text-verde-oscuro whitespace-nowrap">{{ item.total|cop }}</p>
+          </li>
+          {% endfor %}
+        </ul>
+        <dl class="px-6 py-5 space-y-2 border-t border-beige bg-off-white font-cuerpo text-sm">
+          <div class="flex justify-between"><dt class="text-texto-claro">Subtotal</dt><dd class="font-nav font-bold text-verde-oscuro">{{ order.subtotal|cop }}</dd></div>
+          <div class="flex justify-between"><dt class="text-texto-claro">Envío</dt><dd class="font-nav font-bold text-verde-oscuro">{% if order.shipping %}{{ order.shipping|cop }}{% else %}Gratis{% endif %}</dd></div>
+          <div class="flex justify-between items-baseline pt-3 border-t-2 border-verde-oscuro">
+            <dt class="font-nav text-xs font-bold uppercase tracking-wider text-verde-oscuro">Total</dt>
+            <dd class="font-titulo font-bold text-verde-oscuro text-2xl">{{ order.total|cop }}</dd>
+          </div>
+        </dl>
+      </div>
+      <div class="bg-blanco rounded-2xl border border-beige/40 shadow-sm p-6 h-fit">
+        <h2 class="font-titulo font-bold text-verde-oscuro text-xl mb-3">Envío a</h2>
+        <p class="font-cuerpo text-sm text-texto/80 leading-relaxed">
+          {{ order.full_name }}<br>
+          {{ order.address }}{% if order.address2 %}<br>{{ order.address2 }}{% endif %}<br>
+          {{ order.city }}, {{ order.department }}<br>
+          {{ order.phone }}
+        </p>
+        <p class="font-nav text-[11px] uppercase tracking-wider text-texto-claro mt-4">Estado: <span class="text-verde-oscuro font-bold">{{ status_label }}</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+{{ purchase|json_script:"viati-purchase" }}
+<script>
+{# Se ejecuta en DOMContentLoaded: el snippet de gtag va después de este bloque en base.html. #}
+document.addEventListener('DOMContentLoaded', function () {
+  'use strict';
+  var root = document.querySelector('[data-order]');
+  if (!root) return;
+  var status = root.getAttribute('data-order-status');
+  var token = root.getAttribute('data-order-token');
+
+  // GA4 "purchase" una sola vez por pedido.
+  if (status === 'pagado' || status === 'enviado') {
+    var key = 'viati_purchase_' + token;
+    var done = false;
+    try { done = sessionStorage.getItem(key) === '1'; } catch (e) {}
+    if (!done) {
+      var data = JSON.parse(document.getElementById('viati-purchase').textContent);
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'purchase', data);
+        try { sessionStorage.setItem(key, '1'); } catch (e) {}
+      }
+    }
+    return;
+  }
+
+  // Pago en espera: consultar el estado cada 4 s durante ~1 minuto.
+  if (status !== 'pendiente' && status !== 'en_proceso') return;
+  var url = root.getAttribute('data-estado-url');
+  var tries = 0;
+  var MAX_TRIES = 15;
+  function poll() {
+    tries++;
+    fetch(url, { credentials: 'same-origin', headers: { Accept: 'application/json' } })
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (data) {
+        if (data && data.status && data.status !== status) { window.location.reload(); return; }
+        next();
+      })
+      .catch(next);
+  }
+  function next() {
+    if (tries < MAX_TRIES) { setTimeout(poll, 4000); return; }
+    var spinner = document.querySelector('[data-waiting-spinner]');
+    if (spinner) spinner.classList.remove('animate-spin');
+    var msg = document.querySelector('[data-waiting-timeout]');
+    if (msg) msg.hidden = false;
+  }
+  setTimeout(poll, 3000);
+});
+</script>
+{% endblock %}

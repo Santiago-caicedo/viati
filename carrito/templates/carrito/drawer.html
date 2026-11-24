@@ -1,0 +1,104 @@
+{# Panel lateral del carrito — equivale al modal "side" de Snipcart con la paleta de globals.css #}
+{# (veil rgba(41,62,49,.45), fondo #FCF9F4, bordes #DACEC2, botón primario naranja). Lo controla static/js/cart.js. #}
+<div id="viati-cart" class="fixed inset-0 z-[90] pointer-events-none" data-cart-root>
+  <div data-cart-veil class="absolute inset-0 bg-[rgba(41,62,49,0.45)] opacity-0 transition-opacity duration-300" aria-hidden="true"></div>
+
+  <aside data-cart-panel role="dialog" aria-modal="true" aria-labelledby="viati-cart-title" tabindex="-1" inert
+         class="absolute top-0 right-0 h-full w-full sm:max-w-[440px] bg-off-white text-texto shadow-[0_8px_32px_rgba(41,62,49,0.12)] flex flex-col translate-x-full transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] outline-none">
+
+    {# ── Encabezado ── #}
+    <div class="flex items-center justify-between px-6 py-5 border-b border-beige">
+      <div class="flex items-baseline gap-3">
+        <h2 id="viati-cart-title" class="font-titulo font-bold text-verde-oscuro text-2xl leading-none">Tu carrito</h2>
+        <span class="font-nav text-xs font-bold uppercase tracking-wider text-texto-claro" data-cart-heading-count></span>
+      </div>
+      <button type="button" data-cart-close
+              class="w-10 h-10 -mr-2 flex items-center justify-center rounded-full text-verde-oscuro hover:text-naranja hover:bg-verde-oscuro/5 transition-viati focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-naranja/25"
+              aria-label="Cerrar carrito">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+
+    {# ── Contenido ── #}
+    <div class="flex-1 overflow-y-auto overscroll-contain px-6" data-cart-body>
+      <div data-cart-loading class="py-16 flex justify-center" hidden>
+        <span class="w-8 h-8 rounded-full border-[3px] border-beige border-t-naranja animate-spin" role="status" aria-label="Cargando carrito"></span>
+      </div>
+
+      <div data-cart-error class="mt-5 font-cuerpo text-sm text-blanco bg-naranja-oscuro rounded-xl px-4 py-3" role="alert" hidden></div>
+
+      <div data-cart-empty class="py-16 flex flex-col items-center text-center" hidden>
+        <span class="w-20 h-20 rounded-full bg-surface-container flex items-center justify-center text-verde-oscuro mb-6">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-9 h-9" aria-hidden="true">
+            <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" />
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+          </svg>
+        </span>
+        <p class="font-titulo font-bold text-verde-oscuro text-xl mb-2">Tu carrito está vacío</p>
+        <p class="font-cuerpo text-texto-claro text-sm mb-8 max-w-[260px]">Descubre nuestros cafés de origen de Boyacá y Santander.</p>
+        <a href="/tienda"
+           class="px-8 py-3.5 bg-naranja text-blanco font-nav text-sm font-bold uppercase tracking-wider rounded-full hover:bg-naranja-hover hover:shadow-[0_6px_20px_rgba(254,131,64,0.35)] active:bg-naranja-oscuro transition-viati">
+          Seguir comprando
+        </a>
+      </div>
+
+      <ul data-cart-items class="divide-y divide-beige/70"></ul>
+    </div>
+
+    {# ── Pie ── #}
+    <div data-cart-footer class="border-t border-beige bg-off-white px-6 pt-5 pb-6 space-y-4" hidden>
+      <p data-cart-free-hint class="font-cuerpo text-xs text-verde-oscuro bg-salvia-claro/50 rounded-xl px-4 py-2.5" hidden></p>
+      <div class="flex items-center justify-between">
+        <span class="font-nav text-sm font-bold uppercase tracking-wider text-verde-oscuro">Subtotal</span>
+        <span data-cart-subtotal class="font-titulo font-bold text-verde-oscuro text-2xl"></span>
+      </div>
+      <p class="font-cuerpo text-xs text-texto-claro -mt-2">Envío calculado en el checkout.</p>
+      <a href="/checkout"
+         class="flex items-center justify-center gap-2 w-full px-8 py-4 bg-naranja text-blanco font-nav text-sm font-bold uppercase tracking-wider rounded-full hover:bg-naranja-hover hover:shadow-[0_6px_20px_rgba(254,131,64,0.35)] active:bg-naranja-oscuro transition-viati focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-naranja/25">
+        Finalizar compra
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
+      </a>
+      <button type="button" data-cart-close
+              class="w-full px-8 py-3 border border-verde-oscuro text-verde-oscuro font-nav text-sm font-bold uppercase tracking-wider rounded-full hover:bg-verde-oscuro/5 transition-viati focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-verde-oscuro/20">
+        Seguir comprando
+      </button>
+    </div>
+  </aside>
+
+  {# Plantilla de una línea del carrito (la clona cart.js) #}
+  <template id="viati-cart-item">
+    <li class="flex gap-4 py-5 transition-opacity" data-key="">
+      <a data-item-link href="#" tabindex="-1" class="shrink-0 w-20 h-20 rounded-xl bg-surface-container overflow-hidden flex items-center justify-center">
+        <img data-item-image src="" alt="" loading="lazy" class="w-full h-full object-contain p-1.5">
+      </a>
+      <div class="flex-1 min-w-0 flex flex-col">
+        <div class="flex items-start justify-between gap-3">
+          <a data-item-link data-item-name href="#" class="font-titulo font-bold text-verde-oscuro text-base leading-snug hover:text-naranja transition-colors"></a>
+          <button type="button" data-item-remove class="shrink-0 -mt-1 -mr-1 p-1.5 rounded-full text-salvia-medio hover:text-rojo-vino hover:bg-rojo-vino/5 transition-colors" aria-label="Eliminar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" aria-hidden="true">
+              <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+            </svg>
+          </button>
+        </div>
+        <p data-item-options class="font-nav text-[11px] uppercase tracking-wider text-texto-claro mt-1"></p>
+        <div class="mt-auto pt-3 flex items-center justify-between gap-3">
+          <div class="inline-flex items-center border border-beige rounded-full bg-blanco">
+            <button type="button" data-item-dec class="w-8 h-8 flex items-center justify-center text-verde-oscuro hover:text-naranja disabled:text-salvia-medio disabled:cursor-not-allowed transition-colors" aria-label="Quitar uno">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-3.5 h-3.5" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" /></svg>
+            </button>
+            <span data-item-qty class="min-w-[2ch] text-center font-nav text-sm font-bold text-verde-oscuro"></span>
+            <button type="button" data-item-inc class="w-8 h-8 flex items-center justify-center text-verde-oscuro hover:text-naranja disabled:text-salvia-medio disabled:cursor-not-allowed transition-colors" aria-label="Agregar uno">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-3.5 h-3.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+            </button>
+          </div>
+          <div class="text-right">
+            <p data-item-total class="font-nav text-sm font-bold text-verde-oscuro leading-tight"></p>
+            <p data-item-unit class="font-cuerpo text-[11px] text-texto-claro leading-tight"></p>
+          </div>
+        </div>
+      </div>
+    </li>
+  </template>
+</div>

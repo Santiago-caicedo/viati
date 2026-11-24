@@ -1,0 +1,87 @@
+{% load viati %}{# Equivalente a Footer.tsx #}
+<footer class="bg-verde-oscuro text-blanco">
+  <div class="container-viati py-16 md:py-20">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-14">
+      {# Columna 1 — Marca #}
+      <div class="flex flex-col gap-4">
+        <div class="flex items-center gap-3">
+          {% include "partials/logo.html" with variant="badge" size="sm" %}
+          <span class="font-titulo font-bold text-lg text-crema">{{ SITE.nombre }}</span>
+        </div>
+        <p class="text-crema/70 font-cuerpo text-sm leading-relaxed max-w-xs">{{ SITE.descripcion }}</p>
+      </div>
+
+      {# Columna 2 — Sedes #}
+      <div class="flex flex-col gap-5">
+        <div>
+          <h3 class="font-titulo font-bold text-sm uppercase tracking-[0.1em] text-naranja mb-3">Sedes</h3>
+          <ul class="space-y-3">
+            {% for sede in SEDES %}
+            <li class="text-crema/70 font-cuerpo text-sm leading-relaxed">
+              <span class="block text-crema font-semibold">{{ sede.ciudad }}</span>
+              {{ sede.direccion }}
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      {# Columna 3 — Horarios + Contacto #}
+      <div class="flex flex-col gap-5">
+        <div>
+          <h3 class="font-titulo font-bold text-sm uppercase tracking-[0.1em] text-naranja mb-3">Horarios</h3>
+          <ul class="space-y-2">
+            {% for h in HORARIOS %}
+            <li class="text-crema/70 font-cuerpo text-sm"><span class="text-crema font-semibold">{{ h.dias }}:</span> {{ h.rango }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-titulo font-bold text-sm uppercase tracking-[0.1em] text-naranja mb-3">Contacto</h3>
+          <ul class="space-y-2 text-crema/70 font-cuerpo text-sm">
+            {% for tel in CONTACTO.telefonos %}
+            <li><a href="tel:+57{{ tel|cut:' ' }}" class="hover:text-naranja transition-colors">Cel: {{ tel }}</a></li>
+            {% endfor %}
+            <li><a href="mailto:{{ CONTACTO.email }}" class="hover:text-naranja transition-colors break-all">{{ CONTACTO.email }}</a></li>
+          </ul>
+        </div>
+      </div>
+
+      {# Columna 4 — Enlaces + Redes #}
+      <div class="flex flex-col gap-5">
+        <div>
+          <h3 class="font-titulo font-bold text-sm uppercase tracking-[0.1em] text-naranja mb-3">Enlaces</h3>
+          <ul class="space-y-2">
+            {% for link in FOOTER_LINKS %}
+            <li><a href="{{ link.href }}" class="text-crema/70 font-cuerpo text-sm hover:text-naranja transition-colors">{{ link.label }}</a></li>
+            {% endfor %}
+            {% for link in LINKS_LEGALES %}
+            <li><a href="{{ link.href }}" class="text-crema/70 font-cuerpo text-sm hover:text-naranja transition-colors">{{ link.label }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-titulo font-bold text-sm uppercase tracking-[0.1em] text-naranja mb-3">Redes</h3>
+          <div class="flex items-center gap-3">
+            {% for red in REDES_SOCIALES %}
+            <a href="{{ red.url }}" target="_blank" rel="noopener noreferrer" class="text-crema/70 hover:text-naranja transition-colors p-1" aria-label="{{ red.nombre }}">
+              {% social_icon red.icono "w-5 h-5" %}
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-blanco/10">
+    <div class="container-viati flex flex-col sm:flex-row items-center justify-between py-5 gap-3 text-center sm:text-left">
+      <p class="text-crema/70 font-cuerpo text-xs">&copy; {% now "Y" %} {{ SITE.nombre }}. {{ SITE.eslogan }}.</p>
+      <div class="flex items-center gap-4">
+        {% for link in LINKS_LEGALES %}
+        <a href="{{ link.href }}" class="text-crema/70 font-cuerpo text-xs hover:text-naranja transition-colors">{{ link.label }}</a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</footer>

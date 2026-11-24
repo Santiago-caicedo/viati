@@ -1,0 +1,39 @@
+{% load static %}
+{% comment %}Equivale a SellosGrid.tsx ("Nuestros Aliados").{% endcomment %}
+<section class="py-16 bg-off-white border-y border-beige/20">
+  <div class="container-viati">
+    <div class="text-center mb-10">
+      <span class="section-tag">Encuéntranos</span>
+      <h2 class="font-titulo font-bold text-verde-oscuro text-3xl md:text-4xl">
+        Nuestros Aliados
+      </h2>
+      <p class="text-texto-claro font-cuerpo mt-3 max-w-xl mx-auto">
+        Encuentra nuestros cafés de especialidad en estas instituciones
+        aliadas certificadas.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+      <div class="bg-blanco p-6 rounded-2xl shadow-sm shadow-verde-oscuro/5 border border-beige/30 flex flex-col items-center justify-center gap-4 hover:-translate-y-1 transition-viati aspect-square">
+        <img src="{% static 'images/Aliados/after-leto.png' %}" alt="Afternoon" width="120" height="80" loading="lazy" decoding="async" class="object-contain w-full h-auto max-h-20">
+        <span class="font-nav font-bold text-xs uppercase tracking-wider text-verde-oscuro text-center leading-tight">Afternoon</span>
+      </div>
+      <div class="bg-blanco p-6 rounded-2xl shadow-sm shadow-verde-oscuro/5 border border-beige/30 flex flex-col items-center justify-center gap-4 hover:-translate-y-1 transition-viati aspect-square">
+        <img src="{% static 'images/Aliados/aliado-4.png' %}" alt="Café y Postres Chicalá" width="120" height="80" loading="lazy" decoding="async" class="object-contain w-full h-auto max-h-20">
+        <span class="font-nav font-bold text-xs uppercase tracking-wider text-verde-oscuro text-center leading-tight">Café y Postres Chicalá</span>
+      </div>
+      <div class="bg-blanco p-6 rounded-2xl shadow-sm shadow-verde-oscuro/5 border border-beige/30 flex flex-col items-center justify-center gap-4 hover:-translate-y-1 transition-viati aspect-square">
+        <img src="{% static 'images/Aliados/hotel-vizcaya-plaza.gif' %}" alt="Hotel Vizcaya Plaza" width="120" height="80" loading="lazy" decoding="async" class="object-contain w-full h-auto max-h-20">
+        <span class="font-nav font-bold text-xs uppercase tracking-wider text-verde-oscuro text-center leading-tight">Hotel Vizcaya Plaza</span>
+      </div>
+      <div class="bg-blanco p-6 rounded-2xl shadow-sm shadow-verde-oscuro/5 border border-beige/30 flex flex-col items-center justify-center gap-4 hover:-translate-y-1 transition-viati aspect-square">
+        <img src="{% static 'images/Aliados/aliado-5.jpeg' %}" alt="Herencia" width="120" height="80" loading="lazy" decoding="async" class="object-contain w-full h-auto max-h-20">
+        <span class="font-nav font-bold text-xs uppercase tracking-wider text-verde-oscuro text-center leading-tight">Herencia</span>
+      </div>
+      <div class="bg-blanco p-6 rounded-2xl shadow-sm shadow-verde-oscuro/5 border border-beige/30 flex flex-col items-center justify-center gap-4 hover:-translate-y-1 transition-viati aspect-square">
+        <img src="{% static 'images/Aliados/SELLO-CAFE-S.png' %}" alt="Cafe Entrenos" width="120" height="80" loading="lazy" decoding="async" class="object-contain w-full h-auto max-h-20">
+        <span class="font-nav font-bold text-xs uppercase tracking-wider text-verde-oscuro text-center leading-tight">Cafe Entrenos</span>
+      </div>
+    </div>
+  </div>
+</section>

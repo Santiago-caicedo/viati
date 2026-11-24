@@ -1,0 +1,72 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es" class="h-full antialiased">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#293E31">
+  <meta name="color-scheme" content="light">
+  <script>document.documentElement.classList.add('js');</script>
+
+  {% block meta %}
+  <title>{% block title %}{{ SITE.nombre }} — {{ SITE.eslogan }}{% endblock %}</title>
+  <meta name="description" content="{% block description %}{{ SITE.descripcion }}{% endblock %}">
+  <meta name="keywords" content="café de especialidad, café colombiano, Viati Café, Togüí, Boyacá, café de origen, comprar café colombiano, café Boyacá, café Santander">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="{{ SITE.url }}{{ request.path }}">
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+  <meta property="og:site_name" content="{{ SITE.nombre }}">
+  <meta property="og:locale" content="es_CO">
+  <meta property="og:url" content="{{ SITE.url }}{{ request.path }}">
+  <meta property="og:title" content="{% block og_title %}{{ SITE.nombre }} — {{ SITE.eslogan }}{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}{{ SITE.descripcion }}{% endblock %}">
+  <meta property="og:image" content="{% block og_image %}{{ SITE.url }}{% static 'images/hero/slide-3-frame.jpg' %}{% endblock %}">
+  <meta name="twitter:card" content="summary_large_image">
+  {% endblock %}
+
+  <link rel="icon" href="{% static 'images/logo-naranja.ico' %}">
+  <link rel="apple-touch-icon" href="{% static 'images/logo.png' %}">
+  <link rel="manifest" href="/manifest.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:wght@400;700&family=Source+Serif+4:wght@600;700&display=swap">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+
+  <script type="application/ld+json">{{ ORGANIZATION_JSONLD|safe }}</script>
+  {% block jsonld %}{% endblock %}
+  {% block head %}{% endblock %}
+</head>
+<body class="min-h-full flex flex-col font-cuerpo">
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[9999] focus:bg-naranja focus:text-blanco focus:px-4 focus:py-2 focus:rounded-full">
+    Saltar al contenido principal
+  </a>
+
+  {% include "partials/header.html" %}
+
+  <main id="main-content" class="flex-1">{% block content %}{% endblock %}</main>
+
+  {% include "partials/footer.html" %}
+
+  {# Panel lateral del carrito (equivale al modal "side" de Snipcart) #}
+  {% include "carrito/drawer.html" %}
+
+  {# Toasts "Agregado al carrito" #}
+  <div id="viati-toasts" aria-live="polite" aria-label="Notificaciones del carrito"
+       class="fixed bottom-6 right-6 z-[100] flex flex-col gap-2 pointer-events-none"></div>
+
+  {% csrf_token %}
+  <script src="{% static 'js/main.js' %}" defer></script>
+  <script src="{% static 'js/cart.js' %}" defer></script>
+  {% block scripts %}{% endblock %}
+
+  {% if GA_MEASUREMENT_ID %}
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ GA_MEASUREMENT_ID }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{ GA_MEASUREMENT_ID }}');
+  </script>
+  {% endif %}
+</body>
+</html>

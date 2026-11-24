@@ -1,0 +1,62 @@
+{# Carrusel de destacados (equivale a ProductosGrid.tsx). JS: initProductosGrid en static/js/tienda.js #}
+<section class="relative py-20 md:py-28 overflow-hidden">
+  <div class="grain-overlay"></div>
+
+  <div class="container-viati relative z-10">
+    <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+      <div class="relative">
+        <span class="text-naranja font-titulo font-bold text-7xl md:text-8xl leading-none opacity-10 absolute -top-6 -left-2 select-none pointer-events-none">
+          01
+        </span>
+        <span class="section-tag relative">Nuestra Colección</span>
+        <h2 class="font-titulo font-bold text-verde-oscuro text-3xl md:text-4xl relative">
+          Explora Nuestra Selección
+        </h2>
+        <p class="text-texto-claro font-cuerpo mt-2 relative">
+          Cafés de especialidad seleccionados cuidadosamente para ti.
+        </p>
+      </div>
+      <a href="/tienda"
+         class="text-verde-header font-nav text-sm font-bold uppercase tracking-wider hover:text-naranja transition-viati flex items-center gap-1 shrink-0 relative">
+        Ver todo
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+          <line x1="5" y1="12" x2="19" y2="12" />
+          <polyline points="12 5 19 12 12 19" />
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="relative z-10">
+    <div data-drag-scroll
+         class="overflow-x-hidden pb-4 cursor-grab active:cursor-grabbing select-none scrollbar-hide -mx-4 md:-mx-0 pl-4 md:pl-0"
+         style="mask-image: linear-gradient(to right, black 0%, black 96%, transparent 100%); -webkit-mask-image: linear-gradient(to right, black 0%, black 96%, transparent 100%);">
+      <div class="flex gap-5 min-w-max">
+        {% for product in products %}
+        <div>
+          {% include "tienda/_product_card.html" with product=product %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div data-swipe-hint
+         class="flex items-center justify-center gap-2 mt-2 text-texto-claro/70 font-cuerpo text-xs tracking-wider pointer-events-none"
+         style="transition: opacity .8s cubic-bezier(0.25, 0.1, 0.25, 1);">
+      <span class="inline-block" data-nudge="-8">&#8592;</span>
+      Desliza para ver más
+      <span class="inline-block" data-nudge="8">&#8594;</span>
+    </div>
+  </div>
+
+  <div class="container-viati relative z-10 mt-10 text-center">
+    <a href="/tienda"
+       class="inline-flex items-center gap-2 bg-naranja text-blanco px-8 py-3.5 rounded-full font-nav text-sm font-bold uppercase tracking-wider hover:bg-naranja-hover transition-viati shadow-lg shadow-naranja/30">
+      Ordenar en Línea
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+        <line x1="5" y1="12" x2="19" y2="12" />
+        <polyline points="12 5 19 12 12 19" />
+      </svg>
+    </a>
+  </div>
+</section>

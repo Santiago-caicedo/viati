@@ -1,0 +1,15 @@
+{% extends "admin/index.html" %}
+{% comment %}Portada del admin: agrega el acceso al panel de estadísticas.{% endcomment %}
+
+{% block content %}
+<div class="module" style="margin-bottom:20px">
+  <table style="width:100%">
+    <caption>Resumen</caption>
+    <tr>
+      <th scope="row"><a href="{% url 'admin_estadisticas' %}">📊 Estadísticas de la tienda</a></th>
+      <td style="color:var(--body-quiet-color)">Ventas, pedidos por enviar, productos más vendidos y checkouts abandonados</td>
+    </tr>
+  </table>
+</div>
+{{ block.super }}
+{% endblock %}

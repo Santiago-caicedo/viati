@@ -1,0 +1,7 @@
+{% extends "admin/base_site.html" %}
+{% comment %}Agrega "Estadísticas" a los enlaces de la barra superior del admin.{% endcomment %}
+
+{% block userlinks %}
+<a href="{% url 'admin_estadisticas' %}">Estadísticas</a> /
+{{ block.super }}
+{% endblock %}

@@ -1,0 +1,85 @@
+{% load viati %}{% comment %}Tarjeta de producto (equivale a src/components/ui/ProductCard.tsx).
+   Uso: {% include "tienda/_product_card.html" with product=p card_class="w-full" %}
+   Sin card_class se usa "w-72 shrink-0". El estado (tamaño, molienda, "Agregado")
+   lo maneja static/js/tienda.js sobre [data-product-card].{% endcomment %}
+{% with sizes=product.size_list %}
+<div class="group bg-blanco rounded-2xl overflow-hidden shadow-sm shadow-verde-oscuro/5 border border-beige/30 flex flex-col h-full transition-viati hover:-translate-y-1 hover:shadow-md hover:shadow-verde-oscuro/10 {{ card_class|default:'w-72 shrink-0' }}"
+     data-product-card data-base-price="{{ product.base_price }}" data-multi="{% if product.has_multiple_prices %}1{% else %}0{% endif %}">
+  <a href="{{ product.get_absolute_url }}" class="block">
+    <div class="aspect-square relative overflow-hidden bg-off-white">
+      <img src="{{ product.image_url }}" alt="{{ product.name }}" width="640" height="640" loading="lazy" decoding="async" draggable="false"
+           sizes="(max-width: 640px) 90vw, 320px"
+           class="absolute inset-0 w-full h-full object-contain group-hover:scale-105 transition-transform duration-500">
+      {% if product.origin %}
+      <span class="absolute top-3 left-3 bg-verde-oscuro text-crema text-[10px] font-nav font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
+        {{ product.origin }}
+      </span>
+      {% endif %}
+    </div>
+  </a>
+
+  <div class="p-5 flex flex-col flex-1 gap-3">
+    <div class="flex-1">
+      <h3 class="font-titulo font-bold text-lg text-verde-header">
+        {{ product.name }}
+      </h3>
+      <p class="text-texto-claro text-sm font-cuerpo mt-1 line-clamp-2">
+        {{ product.description }}
+      </p>
+      <a href="{{ product.get_absolute_url }}"
+         class="inline-block text-verde-header text-xs font-nav font-bold uppercase tracking-wider hover:text-naranja transition-viati mt-1.5">
+        Ver detalle &rsaquo;
+      </a>
+    </div>
+
+    {% if sizes %}
+    <div class="flex gap-1.5 flex-wrap">
+      {% for size in sizes %}
+      <button type="button" data-size-btn data-size="{{ size.name }}" data-price="{{ size.price }}"
+              class="px-3 py-1 rounded-full text-xs font-nav font-bold uppercase tracking-wider transition-viati {% if forloop.first %}bg-verde-oscuro text-crema{% else %}bg-beige/30 text-verde-oscuro hover:bg-beige/60{% endif %}">
+        {{ size.name }}
+      </button>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if product.grind_options %}
+    <div class="flex gap-1.5 flex-wrap">
+      <span class="text-xs font-nav font-bold uppercase tracking-wider text-texto-claro self-center mr-1">
+        Molienda:
+      </span>
+      {% for grind in product.grind_options %}
+      <button type="button" data-grind-btn data-grind="{{ grind }}"
+              class="px-3 py-1 rounded-full text-xs font-nav font-bold uppercase tracking-wider transition-viati {% if forloop.first %}bg-naranja-oscuro text-crema{% else %}bg-beige/30 text-verde-oscuro hover:bg-beige/60{% endif %}">
+        {{ grind }}
+      </button>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="flex items-center justify-between pt-3 border-t border-beige/20">
+      <span class="font-nav font-bold text-naranja-oscuro text-sm" data-price-display>{% if product.has_multiple_prices %}Desde {% endif %}{{ product.base_price|cop }}</span>
+
+      <button type="button" data-added-btn hidden
+              class="flex items-center gap-1.5 bg-verde-oscuro text-crema px-4 py-2 rounded-full text-sm font-nav font-medium">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+        Agregado
+      </button>
+      <button type="button" data-add-to-cart
+              data-slug="{{ product.slug }}" data-size="{% if sizes %}{{ sizes.0.name }}{% endif %}"
+              data-grind="{% if product.grind_options %}{{ product.grind_options.0 }}{% endif %}"
+              data-qty="1" data-name="{{ product.name }}"
+              class="flex items-center gap-1.5 bg-naranja text-blanco px-4 py-2 rounded-full text-sm font-nav font-medium hover:bg-naranja-hover transition-viati"
+              aria-label="Agregar {{ product.name }} al carrito">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+        Agregar
+      </button>
+    </div>
+  </div>
+</div>
+{% endwith %}

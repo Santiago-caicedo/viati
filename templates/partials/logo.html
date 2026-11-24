@@ -1,0 +1,6 @@
+{% comment %}
+Equivalente a Logo.tsx.
+Parámetros: variant = "full" | "badge" | "naranja" (default "full"),
+            size = "sm" | "md" | "lg" (default "md"), class = clases extra.
+Uso: {% include "partials/logo.html" with variant="full" size="md" class="hidden md:flex" %}
+{% endcomment %}{% with v=variant|default:"full" s=size|default:"md" %}{% if s == "sm" %}{% include "partials/_logo_inner.html" with v=v s=s bs=40 %}{% elif s == "lg" %}{% include "partials/_logo_inner.html" with v=v s=s bs=136 %}{% else %}{% include "partials/_logo_inner.html" with v=v s=s bs=64 %}{% endif %}{% endwith %}

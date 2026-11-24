@@ -1,0 +1,15 @@
+{% with s=seccion %}
+<ul class="space-y-1 font-nav text-sm">
+  <li><a href="{% url 'panel:inicio' %}" {% if s == 'inicio' %}aria-current="page"{% endif %} class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors {% if s == 'inicio' %}bg-naranja text-blanco font-bold{% else %}text-crema hover:bg-crema/10{% endif %}"><span aria-hidden="true">📊</span>Estadísticas</a></li>
+  <li><a href="{% url 'panel:pedidos' %}" {% if s == 'pedidos' %}aria-current="page"{% endif %} class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors {% if s == 'pedidos' %}bg-naranja text-blanco font-bold{% else %}text-crema hover:bg-crema/10{% endif %}"><span aria-hidden="true">📦</span>Pedidos</a></li>
+  <li><a href="{% url 'panel:productos' %}" {% if s == 'productos' %}aria-current="page"{% endif %} class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors {% if s == 'productos' %}bg-naranja text-blanco font-bold{% else %}text-crema hover:bg-crema/10{% endif %}"><span aria-hidden="true">☕</span>Productos</a></li>
+  <li><a href="{% url 'panel:envios' %}" {% if s == 'envios' %}aria-current="page"{% endif %} class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors {% if s == 'envios' %}bg-naranja text-blanco font-bold{% else %}text-crema hover:bg-crema/10{% endif %}"><span aria-hidden="true">🚚</span>Envíos</a></li>
+  <li><a href="{% url 'panel:cuenta' %}" {% if s == 'cuenta' %}aria-current="page"{% endif %} class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors {% if s == 'cuenta' %}bg-naranja text-blanco font-bold{% else %}text-crema hover:bg-crema/10{% endif %}"><span aria-hidden="true">👤</span>Mi cuenta</a></li>
+</ul>
+<div class="mt-4 border-t border-crema/15 pt-4 px-3 text-xs text-crema/70">
+  <p class="truncate">Sesión: <strong class="text-crema">{{ request.user.get_username }}</strong></p>
+  <form method="post" action="{% url 'panel:salir' %}" class="mt-2">{% csrf_token %}
+    <button type="submit" class="rounded-full border border-crema/30 px-4 py-1.5 font-nav text-xs font-bold uppercase tracking-wider text-crema hover:bg-naranja hover:border-naranja hover:text-blanco transition-colors">Cerrar sesión</button>
+  </form>
+</div>
+{% endwith %}

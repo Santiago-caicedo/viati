@@ -1,0 +1,43 @@
+{% load static %}{# Equivale a BannerOrigenes.tsx. ScrollReveal once={false} → data-reveal-repeat (tienda.js) #}
+<section class="relative bg-verde-oscuro overflow-hidden">
+  <div class="absolute inset-0 z-0">
+    <img src="{% static 'images/hero/slide-3-frame.jpg' %}" alt="Paisaje de los orígenes cafeteros de Boyacá y Santander"
+         width="1920" height="1080" loading="lazy" decoding="async" sizes="100vw"
+         class="absolute inset-0 w-full h-full object-cover">
+  </div>
+
+  <div class="absolute inset-0 bg-gradient-to-br from-verde-oscuro/60 via-verde-oscuro/55 to-verde-header/60 z-10"></div>
+
+  <div class="absolute inset-0 opacity-15 z-20"
+       style="background-image: radial-gradient(circle at 30% 50%, #F0EEB6 0%, transparent 50%), radial-gradient(circle at 70% 50%, #FE8340 0%, transparent 50%);"></div>
+
+  <div class="absolute inset-0 z-20 grain-overlay"></div>
+
+  <div class="relative z-30 container-viati py-20 md:py-28 text-center section-dark">
+    <div data-reveal="up" data-reveal-repeat>
+      <span class="section-tag">Orígenes</span>
+    </div>
+    <div data-reveal="up" data-reveal-repeat style="--reveal-delay:.15s">
+      <h2 class="font-titulo font-bold text-blanco text-3xl md:text-4xl lg:text-5xl leading-tight mb-5">
+        Conoce el Origen de Nuestros Cafés
+      </h2>
+    </div>
+    <div data-reveal="up" data-reveal-repeat style="--reveal-delay:.3s">
+      <p class="font-cuerpo text-lg text-blanco/80 max-w-2xl mx-auto mb-8">
+        Cada café tiene una historia. Desde las montañas de Boyacá y
+        Santander, descubre los territorios y las manos que hacen posible
+        cada taza.
+      </p>
+    </div>
+    <div data-reveal="up" data-reveal-repeat style="--reveal-delay:.45s">
+      <a href="/origenes"
+         class="inline-flex items-center gap-2 bg-naranja text-blanco px-8 py-3.5 rounded-full font-nav text-sm font-bold uppercase tracking-wider hover:bg-naranja-hover transition-viati shadow-lg shadow-naranja/30">
+        Explorar Orígenes
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+          <line x1="5" y1="12" x2="19" y2="12" />
+          <polyline points="12 5 19 12 12 19" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,24 @@
+{% load viati %}
+<section class="rounded-2xl bg-blanco p-5 shadow-sm">
+  <h2 class="font-titulo text-lg font-bold text-verde-oscuro">{{ titulo }}</h2>
+  <table class="mt-3 w-full text-sm">
+    <thead><tr class="text-left font-nav text-[11px] uppercase tracking-wider text-texto-claro">
+      {% if tipo == "productos" %}<th class="py-2">Producto</th><th class="py-2 text-right">Unidades</th><th class="py-2 text-right">Ingresos</th>
+      {% elif tipo == "presentaciones" %}<th class="py-2">Producto</th><th class="py-2">Presentación</th><th class="py-2 text-right">Unidades</th>
+      {% elif tipo == "departamentos" %}<th class="py-2">Departamento</th><th class="py-2 text-right">Pedidos</th><th class="py-2 text-right">Ingresos</th>
+      {% else %}<th class="py-2">Ciudad</th><th class="py-2 text-right">Pedidos</th><th class="py-2 text-right">Ingresos</th>{% endif %}
+    </tr></thead>
+    <tbody class="divide-y divide-beige/50">
+      {% for f in filas %}
+      <tr>
+        {% if tipo == "productos" %}<td class="py-2">{{ f.product_name }}</td><td class="py-2 text-right tabular-nums">{{ f.unidades }}</td><td class="py-2 text-right tabular-nums">{{ f.ingresos|cop }}</td>
+        {% elif tipo == "presentaciones" %}<td class="py-2">{{ f.product_name }}</td><td class="py-2">{{ f.size|default:"—" }}{% if f.grind %} · {{ f.grind }}{% endif %}</td><td class="py-2 text-right tabular-nums">{{ f.unidades }}</td>
+        {% elif tipo == "departamentos" %}<td class="py-2">{{ f.department }}</td><td class="py-2 text-right tabular-nums">{{ f.pedidos }}</td><td class="py-2 text-right tabular-nums">{{ f.ingresos|cop }}</td>
+        {% else %}<td class="py-2">{{ f.city }} <span class="text-texto-claro">({{ f.department }})</span></td><td class="py-2 text-right tabular-nums">{{ f.pedidos }}</td><td class="py-2 text-right tabular-nums">{{ f.ingresos|cop }}</td>{% endif %}
+      </tr>
+      {% empty %}
+      <tr><td colspan="3" class="py-4 text-texto-claro">Sin ventas en el periodo.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>

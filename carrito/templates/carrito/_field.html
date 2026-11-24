@@ -1,0 +1,10 @@
+{# Campo del checkout con el estilo de ContactForm.tsx. Uso: include with field=form.x #}
+<div class="space-y-2{% if class %} {{ class }}{% endif %}">
+  <label for="{{ field.id_for_label }}" class="block font-nav text-xs font-bold text-verde-oscuro uppercase tracking-wider">
+    {{ field.label }}{% if field.field.required %}<span class="text-naranja" aria-hidden="true"> *</span>{% endif %}
+  </label>
+  {{ field }}
+  {% for error in field.errors %}
+  <p class="font-cuerpo text-xs text-naranja-oscuro mt-1" id="{{ field.auto_id }}-error">{{ error }}</p>
+  {% endfor %}
+</div>

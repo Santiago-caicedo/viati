@@ -1,0 +1,74 @@
+{% comment %}
+Equivale a GalleryWithLightbox.tsx. Parámetro: images = lista de {url, alt}.
+static/js/paginas.js abre el lightbox (Escape, ← y → para navegar).
+{% endcomment %}
+<div data-gallery>
+  <div class="grid grid-cols-2 md:grid-cols-12 gap-4">
+    {% for img in images|slice:":1" %}
+    <button type="button" data-gallery-index="0" data-src="{{ img.url }}" data-alt="{{ img.alt }}"
+            class="col-span-2 md:col-span-8 md:row-span-2 relative min-h-[250px] md:min-h-[500px] rounded-2xl overflow-hidden group text-left"
+            aria-label="Abrir imagen 1: {{ img.alt }}">
+      <img src="{{ img.url }}" alt="{{ img.alt }}" loading="lazy" decoding="async"
+           class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+      <div class="absolute inset-0 bg-verde-oscuro/0 group-hover:bg-verde-oscuro/20 transition-colors"></div>
+    </button>
+    {% endfor %}
+    {% for img in images|slice:"1:3" %}
+    <button type="button" data-gallery-index="{{ forloop.counter }}" data-src="{{ img.url }}" data-alt="{{ img.alt }}"
+            class="col-span-1 md:col-span-4 relative min-h-[180px] md:min-h-[240px] rounded-2xl overflow-hidden group text-left">
+      <img src="{{ img.url }}" alt="{{ img.alt }}" loading="lazy" decoding="async"
+           class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+      <div class="absolute inset-0 bg-verde-oscuro/0 group-hover:bg-verde-oscuro/20 transition-colors"></div>
+    </button>
+    {% endfor %}
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-12 gap-4 mt-4">
+    {% for img in images|slice:"3:" %}
+    <button type="button" data-gallery-index="{{ forloop.counter|add:2 }}" data-src="{{ img.url }}" data-alt="{{ img.alt }}"
+            class="col-span-1 md:col-span-6 relative min-h-[200px] md:min-h-[300px] rounded-2xl overflow-hidden group text-left">
+      <img src="{{ img.url }}" alt="{{ img.alt }}" loading="lazy" decoding="async"
+           class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+      <div class="absolute inset-0 bg-verde-oscuro/0 group-hover:bg-verde-oscuro/20 transition-colors"></div>
+    </button>
+    {% endfor %}
+  </div>
+
+  {# Plantilla del lightbox: paginas.js la clona en <body> al abrir. #}
+  <template data-lightbox-template>
+    <div class="fixed inset-0 z-[999] bg-verde-oscuro/95 backdrop-blur-sm flex items-center justify-center opacity-0 transition-opacity duration-[250ms]"
+         role="dialog" aria-modal="true" aria-label="Galería de imágenes" data-lightbox>
+      <button type="button" data-lightbox-close
+              class="fixed top-4 right-4 z-20 w-10 h-10 rounded-full bg-blanco/20 text-blanco flex items-center justify-center hover:bg-blanco/30 transition-all"
+              aria-label="Cerrar galería">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+
+      <span class="fixed top-4 left-4 z-20 font-nav text-xs font-bold text-blanco/60 uppercase tracking-wider" data-lightbox-counter></span>
+
+      <button type="button" data-lightbox-prev
+              class="fixed left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full bg-blanco/20 text-blanco flex items-center justify-center hover:bg-blanco/30 transition-all"
+              aria-label="Imagen anterior">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" aria-hidden="true">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+
+      <div class="opacity-0 scale-95 transition duration-200" data-lightbox-figure>
+        <img src="" alt="" width="1600" height="1067" data-lightbox-img
+             class="block max-w-[90vw] max-h-[85vh] w-auto h-auto object-contain">
+      </div>
+
+      <button type="button" data-lightbox-next
+              class="fixed right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full bg-blanco/20 text-blanco flex items-center justify-center hover:bg-blanco/30 transition-all"
+              aria-label="Siguiente imagen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" aria-hidden="true">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </button>
+    </div>
+  </template>
+</div>

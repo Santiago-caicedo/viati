@@ -1,0 +1,56 @@
+{% load static %}{# Slider del hero (equivale a HeroSlider.tsx). JS: initHeroSlider en static/js/tienda.js #}
+<section class="relative h-[85vh] min-h-[500px] md:min-h-[650px] overflow-hidden" data-hero-slider
+         data-slides='["{% static "images/hero/slide-1.jpg" %}","{% static "images/hero/slide-2.jpeg" %}"]'>
+  <div class="absolute inset-0" data-hero-slide>
+    <img src="{% static 'images/hero/slide-1.jpg' %}" alt="Paisaje cafetero Viati Café"
+         width="1920" height="1080" loading="eager" fetchpriority="high" decoding="async" sizes="100vw"
+         class="absolute inset-0 w-full h-full object-cover" data-hero-img>
+    <div class="absolute inset-0 bg-gradient-to-r from-verde-oscuro/80 via-verde-oscuro/50 to-transparent z-10"></div>
+
+    <div class="relative z-20 h-full flex items-center">
+      <div class="container-viati">
+        <div class="max-w-2xl section-dark">
+          <span class="inline-block font-cuerpo text-sm md:text-base uppercase tracking-[0.15em] text-crema mb-4">
+            Herencia de Boyacá y Santander
+          </span>
+          <h1 class="font-titulo font-bold text-blanco text-4xl md:text-5xl lg:text-6xl leading-tight mb-5 drop-shadow-md">
+            Vida y Tierra Colombiana
+          </h1>
+          <p class="font-cuerpo text-lg md:text-xl text-blanco/90 mb-8 max-w-xl drop-shadow-sm leading-relaxed">
+            Descubre la esencia del café de autor. Cultivado con
+            pasión, tostado con precisión y servido para celebrar la
+            riqueza de nuestra tierra en cada taza.
+          </p>
+          <a href="/tienda"
+             class="inline-flex items-center gap-2 bg-naranja text-blanco px-8 py-3.5 rounded-full font-nav text-sm font-bold uppercase tracking-wider hover:bg-naranja-hover transition-viati shadow-lg shadow-naranja/30">
+            Ordenar en Línea
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" data-hero-prev
+          class="absolute bottom-6 left-6 z-30 w-10 h-10 md:w-12 md:h-12 rounded-full bg-blanco/20 backdrop-blur-sm text-blanco flex items-center justify-center hover:bg-blanco/40 transition-all"
+          aria-label="Anterior slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+      <polyline points="15 18 9 12 15 6" />
+    </svg>
+  </button>
+  <button type="button" data-hero-next
+          class="absolute bottom-6 right-6 z-30 w-10 h-10 md:w-12 md:h-12 rounded-full bg-blanco/20 backdrop-blur-sm text-blanco flex items-center justify-center hover:bg-blanco/40 transition-all"
+          aria-label="Siguiente slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  </button>
+
+  <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2">
+    <button type="button" data-hero-dot="0" class="w-2.5 h-2.5 rounded-full transition-all duration-300 bg-naranja w-8" aria-label="Ir al slide 1"></button>
+    <button type="button" data-hero-dot="1" class="w-2.5 h-2.5 rounded-full transition-all duration-300 bg-blanco/50 hover:bg-blanco/80" aria-label="Ir al slide 2"></button>
+  </div>
+</section>

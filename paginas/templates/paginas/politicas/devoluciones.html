@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% comment %}Equivale a src/app/politicas/devoluciones/page.tsx{% endcomment %}
+
+{% block title %}Política de Devoluciones — Viati Café{% endblock %}
+{% block description %}Política de devoluciones y reembolsos de {{ SITE.nombre }}. Conoce los plazos de 30 días, condiciones del producto, excepciones y el proceso para solicitar una devolución.{% endblock %}
+{% block og_title %}Política de Devoluciones | Viati Café{% endblock %}
+{% block og_description %}Información sobre devoluciones y reembolsos en {{ SITE.nombre }}. Plazos, condiciones y proceso paso a paso para cambios y garantías.{% endblock %}
+
+{% block content %}
+<div class="flex-1">
+  {% include "paginas/politicas/_hero.html" with titulo="Devoluciones" texto="Estamos comprometidos con tu satisfacción. Conoce nuestra política de cambios, devoluciones y reembolsos." %}
+
+  <section class="py-16 md:py-20 bg-blanco">
+    <div class="container-viati max-w-3xl">
+      <div class="space-y-12">
+        {# Plazo #}
+        <div>
+          <h2 class="font-titulo font-bold text-verde-oscuro text-2xl md:text-3xl mb-4">
+            Plazo para Devoluciones
+          </h2>
+          <p class="font-cuerpo text-texto/80 leading-relaxed">
+            Aceptamos devoluciones dentro de los siguientes 30 días
+            calendario a partir de la fecha de recepción del pedido. Pasado
+            este plazo, no podemos ofrecer reembolso ni cambio.
+          </p>
+        </div>
+
+        {# Condiciones #}
+        <div>
+          <h2 class="font-titulo font-bold text-verde-oscuro text-2xl md:text-3xl mb-4">
+            Condiciones
+          </h2>
+          <p class="font-cuerpo text-texto/80 leading-relaxed mb-4">
+            Para que una devolución sea aceptada, el producto debe cumplir
+            con las siguientes condiciones:
+          </p>
+          <ul class="space-y-3 font-cuerpo text-texto/80">
+            <li class="flex items-start gap-3">
+              <span class="text-naranja mt-1 shrink-0">•</span>
+              <span>Encontrarse sin abrir y en su empaque original.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-naranja mt-1 shrink-0">•</span>
+              <span>No haber sido utilizado ni manipulado.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-naranja mt-1 shrink-0">•</span>
+              <span>Conservar la factura o comprobante de compra.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-naranja mt-1 shrink-0">•</span>
+              <span>
+                Los productos en promoción o liquidación pueden tener
+                condiciones especiales.
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        {# Excepciones #}
+        <div>
+          <h2 class="font-titulo font-bold text-verde-oscuro text-2xl md:text-3xl mb-4">
+            Excepciones
+          </h2>
+          <p class="font-cuerpo text-texto/80 leading-relaxed">
+            Por razones de higiene y seguridad alimentaria, no aceptamos
+            devoluciones de productos de café que hayan sido abiertos,
+            a menos que presenten un defecto de fabricación. En caso de
+            recibir un producto dañado o incorrecto, contáctanos
+            inmediatamente para resolverlo.
+          </p>
+        </div>
+
+        {# Proceso #}
+        <div>
+          <h2 class="font-titulo font-bold text-verde-oscuro text-2xl md:text-3xl mb-4">
+            Proceso de Devolución
+          </h2>
+          <ol class="space-y-4 font-cuerpo text-texto/80 list-decimal list-inside marker:text-naranja marker:font-bold">
+            <li>
+              Escríbenos a
+              <a href="mailto:gerencia@agroambientec.com" class="text-naranja hover:text-naranja-oscuro transition-colors">gerencia@agroambientec.com</a>
+              indicando tu número de pedido y el motivo de la devolución.
+            </li>
+            <li>
+              Te enviaremos una guía de devolución prepagada (aplica solo
+              para cambios por garantía) o las instrucciones para realizar
+              el envío.
+            </li>
+            <li>
+              Una vez recibamos el producto y verifiquemos su estado,
+              procesaremos el reembolso en un plazo de 5 a 10 días hábiles.
+            </li>
+          </ol>
+        </div>
+
+        {# Reembolsos #}
+        <div>
+          <h2 class="font-titulo font-bold text-verde-oscuro text-2xl md:text-3xl mb-4">
+            Reembolsos
+          </h2>
+          <p class="font-cuerpo text-texto/80 leading-relaxed">
+            El reembolso se realizará a través del mismo medio de pago
+            utilizado en la compra. Una vez aprobada la devolución, el
+            dinero se verá reflejado en un plazo de 5 a 10 días hábiles
+            dependiendo del emisor de tu tarjeta o método de pago. Los
+            costos de envío originales no son reembolsables.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

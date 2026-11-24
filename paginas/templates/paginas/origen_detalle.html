@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load static %}
+{% comment %}Equivale a src/app/origenes/[slug]/page.tsx + OrigenDetail.tsx{% endcomment %}
+
+{% block title %}{{ origen.name }} — Orígenes Viati Café{% endblock %}
+{% block description %}{{ origen.description }} Conoce la región, el clima, los atractivos y el perfil de taza de este café de especialidad colombiano.{% endblock %}
+{% block og_title %}{{ origen.name }} | Viati Café{% endblock %}
+{% block og_description %}{{ origen.description }} Explora el origen de este café de especialidad colombiano. Historia, clima y perfil de taza.{% endblock %}
+{% block og_image %}{{ SITE.url }}{{ origen.image_url }}{% endblock %}
+
+{% block head %}
+  <meta name="twitter:title" content="{{ origen.name }} | Viati Café">
+  <meta name="twitter:description" content="{{ origen.description }}">
+  <meta name="twitter:image" content="{{ SITE.url }}{{ origen.image_url }}">
+{% endblock %}
+
+{% block jsonld %}
+  <script type="application/ld+json">{{ breadcrumb_jsonld|safe }}</script>
+{% endblock %}
+
+{% block content %}
+<header class="relative w-full min-h-[60vh] flex items-center justify-center overflow-hidden bg-verde-oscuro section-dark">
+  <div class="absolute inset-0 z-0">
+    <img src="{{ origen.image_url }}" alt="" fetchpriority="high" decoding="async"
+         class="absolute inset-0 w-full h-full object-cover mix-blend-multiply opacity-80">
+  </div>
+  <div class="relative z-10 text-center container-viati">
+    <span class="text-crema font-nav text-xs font-bold uppercase tracking-[0.2em] mb-4 block">
+      {{ origen.region }}
+    </span>
+    <h1 class="font-titulo font-bold text-blanco text-4xl md:text-5xl lg:text-6xl leading-tight mb-6 max-w-3xl mx-auto">
+      {{ origen.name }}
+    </h1>
+    <p class="font-cuerpo text-lg text-blanco/90 max-w-2xl mx-auto leading-relaxed">
+      {{ origen.description }}
+    </p>
+  </div>
+</header>
+
+<section class="py-20 md:py-28">
+  <div class="container-viati">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+      <div class="lg:col-span-5 space-y-8 lg:sticky lg:top-28" data-tabs>
+        <span class="bg-verde-oscuro text-crema text-[10px] font-nav font-bold uppercase tracking-wider px-3 py-1.5 rounded-full inline-block">
+          {{ origen.region }}
+        </span>
+
+        <div>
+          <h2 class="font-titulo font-bold text-verde-oscuro text-3xl md:text-4xl leading-tight mb-2">
+            {{ origen.name }}
+          </h2>
+          <p class="font-cuerpo text-sm text-texto-claro flex items-center gap-1.5">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 class="w-4 h-4 text-naranja shrink-0" aria-hidden="true">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            {{ origen.ubicacion }} &middot; {{ origen.altitude }}
+          </p>
+        </div>
+
+        <div class="bg-off-white p-6 rounded-xl border border-beige/30 shadow-sm shadow-verde-oscuro/5">
+          <h3 class="font-titulo font-bold text-verde-oscuro text-xl mb-4">
+            Perfil de Taza
+          </h3>
+          <p class="font-cuerpo text-texto-claro leading-relaxed mb-6">
+            {{ origen.perfilTaza }}
+          </p>
+          <div class="flex flex-wrap gap-2">
+            {% for nota in origen.notas %}
+            <span class="px-3 py-1 bg-beige/30 text-texto/80 rounded-full font-nav text-xs font-bold uppercase tracking-wider">
+              {{ nota }}
+            </span>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="border-b border-beige/30">
+          <nav role="tablist" aria-label="Tabs de información del origen" class="-mb-px flex gap-6"
+               data-active-class="border-naranja-oscuro text-naranja-oscuro"
+               data-inactive-class="border-transparent text-texto-claro/80 hover:text-verde-oscuro hover:border-beige">
+            {% for tab in tabs %}
+            <button type="button" role="tab" id="tab-{{ tab.id }}" aria-controls="panel-{{ tab.id }}"
+                    aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                    {% if not forloop.first %}tabindex="-1"{% endif %}
+                    class="whitespace-nowrap py-4 px-1 border-b-2 font-nav text-xs font-bold uppercase tracking-wider transition-viati {% if forloop.first %}border-naranja-oscuro text-naranja-oscuro{% else %}border-transparent text-texto-claro/80 hover:text-verde-oscuro hover:border-beige{% endif %}">
+              {{ tab.label }}
+            </button>
+            {% endfor %}
+          </nav>
+        </div>
+
+        <div class="font-cuerpo text-texto-claro leading-relaxed min-h-[120px]">
+          <div id="panel-clima" role="tabpanel" aria-labelledby="tab-clima" class="transition-opacity duration-300">{{ origen.clima }}</div>
+          <div id="panel-atractivos" role="tabpanel" aria-labelledby="tab-atractivos" class="transition-opacity duration-300" hidden>{{ origen.atractivos }}</div>
+          {% if origen.caficultor %}
+          <div id="panel-caficultor" role="tabpanel" aria-labelledby="tab-caficultor" class="transition-opacity duration-300" hidden>
+            <strong class="text-verde-oscuro font-nav font-bold block mb-2">{{ origen.caficultor }}</strong>
+            {% if origen.finca %}<p class="text-texto-claro font-cuerpo text-sm mb-3">Finca {{ origen.finca }}</p>{% endif %}
+            <p class="font-cuerpo text-texto-claro leading-relaxed">{{ origen.clima }}</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 space-y-6">
+        {% for img in origen.gallery_urls %}
+        <div class="relative h-[300px] md:h-[450px] lg:h-[550px] rounded-2xl overflow-hidden shadow-sm shadow-verde-oscuro/10">
+          <img src="{{ img }}" alt="{{ origen.name }} — {{ origen.region }}" decoding="async"
+               {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
+               class="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}<script src="{% static 'js/paginas.js' %}" defer></script>{% endblock %}

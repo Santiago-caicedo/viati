@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+{% load static %}
+{% comment %}Equivale a src/app/institucional/page.tsx + InstitucionalForm.tsx{% endcomment %}
+
+{% block title %}Viati Institucional — Viati Café{% endblock %}
+{% block description %}Programa corporativo de café de especialidad. Descuentos exclusivos, servicio personalizado, eventos de cata y acceso prioritario a ediciones limitadas para empresas. Eleva la cultura del café en tu organización.{% endblock %}
+{% block og_title %}Viati Institucional | Viati Café{% endblock %}
+{% block og_description %}Soluciones corporativas en café de especialidad. Beneficios exclusivos, catas privadas y servicio personalizado para empresas.{% endblock %}
+
+{% block content %}
+<div class="flex-1">
+  {# Hero #}
+  <section class="relative min-h-[80vh] flex items-center overflow-hidden section-dark">
+    <div class="absolute inset-0 z-0">
+      <img src="{% static 'images/institucional/hero-institucional.jpg' %}" alt="" fetchpriority="high" decoding="async"
+           class="absolute inset-0 w-full h-full object-cover">
+      <div class="absolute inset-0 bg-verde-oscuro/50 backdrop-blur-[2px]"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-verde-oscuro to-transparent opacity-60"></div>
+    </div>
+    <div class="relative z-10 w-full container-viati py-20 md:py-28">
+      <div class="max-w-2xl">
+        <span class="inline-block px-4 py-1 rounded-full bg-naranja/20 border border-naranja/40 text-naranja font-nav text-xs font-bold uppercase tracking-wider mb-6">
+          Soluciones Corporativas
+        </span>
+        <h1 class="font-titulo font-bold text-blanco text-4xl md:text-5xl lg:text-6xl leading-tight mb-6">
+          Viati Institucional
+        </h1>
+        <p class="font-cuerpo text-lg text-blanco/90 leading-relaxed mb-8 max-w-xl">
+          Elevamos la cultura del café en su organización con una
+          experiencia personalizada y especializada. Desde granos de reserva
+          hasta eventos exclusivos diseñados para clientes corporativos
+          exigentes.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="#register"
+             class="px-8 py-4 bg-naranja text-blanco font-nav text-sm font-bold uppercase tracking-wider rounded-full hover:bg-naranja-hover transition-viati text-center shadow-lg shadow-naranja/30">
+            Solicitar Información
+          </a>
+          <a href="#benefits"
+             class="px-8 py-4 border border-blanco/30 text-blanco font-nav text-sm font-bold uppercase tracking-wider rounded-full hover:bg-blanco/10 transition-viati text-center">
+            Ver Beneficios
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {# Benefits Bento Grid #}
+  <section id="benefits" class="py-20 md:py-28 bg-surface-container-low">
+    <div class="container-viati">
+      <div class="text-center mb-16">
+        <h2 class="font-titulo font-bold text-verde-oscuro text-3xl md:text-4xl mb-4">
+          Privilegios Exclusivos
+        </h2>
+        <p class="font-cuerpo text-texto-claro max-w-xl mx-auto">
+          Nuestro programa institucional está diseñado para empresas que
+          valoran la calidad suprema y la herencia cafetera de Boyacá y
+          Santander.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        {# 1. Descuentos #}
+        <div class="md:col-span-8 bg-blanco p-8 md:p-10 rounded-2xl shadow-sm shadow-verde-oscuro/5 border border-beige/30 flex flex-col justify-between group hover:border-naranja/30 transition-viati">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-verde-oscuro text-blanco flex items-center justify-center mb-6">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6" aria-hidden="true">
+                <rect x="2" y="5" width="20" height="14" rx="2" />
+                <line x1="2" y1="10" x2="22" y2="10" />
+              </svg>
+            </div>
+            <h3 class="font-titulo font-bold text-verde-oscuro text-2xl mb-4">
+              1. Descuentos Exclusivos
+            </h3>
+            <p class="font-cuerpo text-texto-claro leading-relaxed max-w-lg">
+              Acceda a una estructura de precios preferencial para pedidos
+              de volumen. Ideal para dotación de oficinas premium, regalos
+              corporativos de fin de año o suministros para salas de juntas
+              de alta dirección.
+            </p>
+          </div>
+        </div>
+
+        {# 2. Servicio Personalizado #}
+        <div class="md:col-span-4 bg-verde-oscuro p-8 md:p-10 rounded-2xl shadow-sm shadow-verde-oscuro/10 text-blanco flex flex-col justify-center section-dark">
+          <div class="w-12 h-12 rounded-xl bg-naranja/20 text-naranja flex items-center justify-center mb-6">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6" aria-hidden="true">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          </div>
+          <h3 class="font-titulo font-bold text-2xl mb-4 text-blanco">
+            2. Servicio Personalizado
+          </h3>
+          <p class="font-cuerpo text-blanco/70 leading-relaxed">
+            Un concierge de café dedicado para asesorarlo en la selección de
+            perfiles de taza según el gusto de su equipo.
+          </p>
+        </div>
+
+        {# 3. Eventos #}
+        <div class="md:col-span-5 bg-blanco p-8 md:p-10 rounded-2xl shadow-sm shadow-verde-oscuro/5 border border-beige/30 group hover:border-naranja/30 transition-viati">
+          <div class="w-12 h-12 rounded-xl bg-beige/30 text-verde-oscuro flex items-center justify-center mb-6">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+          </div>
+          <h3 class="font-titulo font-bold text-verde-oscuro text-2xl mb-4">
+            3. Eventos Especiales
+          </h3>
+          <p class="font-cuerpo text-texto-claro leading-relaxed mb-6">
+            Catas privadas, talleres de barismo y charlas sobre el origen
+            del café directamente en sus oficinas o en nuestras sedes
+            exclusivas.
+          </p>
+          <ul class="space-y-3">
+            <li class="flex items-center gap-3 font-nav text-sm font-bold text-verde-oscuro uppercase tracking-wider">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-naranja shrink-0" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              Catas y Degustaciones
+            </li>
+            <li class="flex items-center gap-3 font-nav text-sm font-bold text-verde-oscuro uppercase tracking-wider">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-naranja shrink-0" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              Talleres de Barismo
+            </li>
+            <li class="flex items-center gap-3 font-nav text-sm font-bold text-verde-oscuro uppercase tracking-wider">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-naranja shrink-0" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              Charlas de Café
+            </li>
+          </ul>
+        </div>
+
+        {# 4. Ediciones Limitadas #}
+        <div class="md:col-span-7 relative rounded-2xl overflow-hidden shadow-sm shadow-verde-oscuro/10 min-h-[320px]">
+          <div class="absolute inset-0">
+            <img src="{% static 'images/institucional/bags-institucional.png' %}" alt="" loading="lazy" decoding="async"
+                 class="absolute inset-0 w-full h-full object-cover">
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-verde-oscuro/90 to-verde-oscuro/20 p-8 md:p-10 flex flex-col justify-end">
+            <h3 class="font-titulo font-bold text-blanco text-2xl mb-3">
+              4. Prioridad en Productos Exclusivos
+            </h3>
+            <p class="font-cuerpo text-blanco/80 max-w-md">
+              Sea el primero en acceder a nuestras cosechas de microlotes y
+              ediciones especiales de temporada antes de que salgan al
+              público general.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {# Registration Form #}
+  <section id="register" class="py-20 md:py-28 bg-off-white relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-1/3 h-full bg-beige/10 -skew-x-12 translate-x-1/2 z-0"></div>
+    <div class="container-viati relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+        <div>
+          <h2 class="font-titulo font-bold text-verde-oscuro text-3xl md:text-4xl mb-6">
+            Únase a la Experiencia Institucional
+          </h2>
+          <p class="font-cuerpo text-texto-claro leading-relaxed mb-10">
+            Complete el siguiente formulario y uno de nuestros asesores
+            expertos se pondrá en contacto para diseñar una propuesta a la
+            medida de su empresa.
+          </p>
+          <div class="space-y-8">
+            <div class="flex items-start gap-5">
+              <div class="w-11 h-11 shrink-0 border border-beige/40 flex items-center justify-center rounded-full">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-verde-oscuro" aria-hidden="true">
+                  <rect x="2" y="4" width="20" height="16" rx="2" />
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-titulo font-bold text-verde-oscuro text-lg">
+                  Email Corporativo
+                </h4>
+                <p class="font-cuerpo text-texto-claro text-sm">
+                  gerencia@agroambientec.com
+                </p>
+              </div>
+            </div>
+            <div class="flex items-start gap-5">
+              <div class="w-11 h-11 shrink-0 border border-beige/40 flex items-center justify-center rounded-full">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-verde-oscuro" aria-hidden="true">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-titulo font-bold text-verde-oscuro text-lg">
+                  Sede Principal
+                </h4>
+                <p class="font-cuerpo text-texto-claro text-sm">
+                  Togüí - Boyacá
+                  Finca La Lupita, Vereda Manga
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-blanco p-8 md:p-12 rounded-2xl shadow-sm shadow-verde-oscuro/5 border border-beige/30">
+          <form class="space-y-6" novalidate
+                data-viati-form="institucional" data-endpoint="/api/institucional"
+                data-error-class="font-cuerpo text-xs text-naranja-oscuro mt-1"
+                data-input-error="border-naranja-oscuro"
+                data-input-ok="border-beige/40 focus:border-naranja"
+                data-busy-class="bg-verde-oscuro/70 text-blanco cursor-not-allowed"
+                data-idle-class="bg-verde-oscuro text-blanco hover:bg-verde-header active:scale-[0.98] shadow-lg shadow-verde-oscuro/20">
+            {% include "paginas/partials/honeypot.html" with prefix="institucional-" %}
+            <div class="space-y-2">
+              <label for="institucional-name" class="block font-nav text-xs font-bold text-verde-oscuro uppercase tracking-wider">
+                Nombre Completo
+              </label>
+              <input id="institucional-name" name="name" type="text" placeholder="Su nombre"
+                     class="w-full bg-transparent border-0 border-b px-0 py-3 font-cuerpo text-texto outline-none transition-colors placeholder:text-texto-claro border-beige/40 focus:border-naranja">
+            </div>
+
+            <div class="space-y-2">
+              <label for="institucional-company" class="block font-nav text-xs font-bold text-verde-oscuro uppercase tracking-wider">
+                Empresa
+              </label>
+              <input id="institucional-company" name="company" type="text" placeholder="Nombre de la compañía"
+                     class="w-full bg-transparent border-0 border-b px-0 py-3 font-cuerpo text-texto outline-none transition-colors placeholder:text-texto-claro border-beige/40 focus:border-naranja">
+            </div>
+
+            <div class="space-y-2">
+              <label for="institucional-email" class="block font-nav text-xs font-bold text-verde-oscuro uppercase tracking-wider">
+                Email Corporativo
+              </label>
+              <input id="institucional-email" name="email" type="email" placeholder="email@empresa.com"
+                     class="w-full bg-transparent border-0 border-b px-0 py-3 font-cuerpo text-texto outline-none transition-colors placeholder:text-texto-claro border-beige/40 focus:border-naranja">
+            </div>
+
+            <div class="space-y-2">
+              <label for="institucional-message" class="block font-nav text-xs font-bold text-verde-oscuro uppercase tracking-wider">
+                ¿En qué podemos ayudarle?
+              </label>
+              <textarea id="institucional-message" name="message" placeholder="Cuéntenos sobre sus necesidades de café corporativo..." rows="3"
+                        class="w-full bg-transparent border-0 border-b px-0 py-3 font-cuerpo text-texto outline-none transition-colors placeholder:text-texto-claro border-beige/40 focus:border-naranja resize-none"></textarea>
+            </div>
+
+            <div class="flex items-start gap-3 py-2">
+              <input id="institucional-newsletter" name="newsletter" type="checkbox"
+                     class="mt-1 rounded border-beige/40 text-naranja focus:ring-naranja cursor-pointer">
+              <label for="institucional-newsletter" class="font-nav text-xs font-bold text-texto-claro uppercase tracking-wider cursor-pointer leading-tight">
+                Deseo recibir el boletín &ldquo;Notas de Cosecha&rdquo; con
+                novedades y ediciones limitadas para clientes institucionales.
+              </label>
+            </div>
+
+            <button type="submit" data-submit data-label="Enviar Solicitud de Registro"
+                    class="w-full font-nav text-sm font-bold uppercase tracking-wider py-5 rounded-full transition-all bg-verde-oscuro text-blanco hover:bg-verde-header active:scale-[0.98] shadow-lg shadow-verde-oscuro/20">
+              Enviar Solicitud de Registro
+            </button>
+          </form>
+          {% include "paginas/partials/form_status.html" with success="Solicitud enviada con éxito. Un asesor se pondrá en contacto pronto." error="Error al enviar la solicitud. Intenta de nuevo." %}
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{% static 'js/paginas.js' %}" defer></script>{% endblock %}

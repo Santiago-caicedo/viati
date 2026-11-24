@@ -1,0 +1,10 @@
+{# Insignia de estado del pedido: texto + color (nunca solo color). Uso: include with o=order #}
+<span class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 font-nav text-[11px] font-bold uppercase tracking-wide
+  {% if o.status == 'pagado' %}bg-melon text-rojo-vino
+  {% elif o.status == 'enviado' %}bg-salvia-claro text-verde-oscuro
+  {% elif o.status == 'en_proceso' %}bg-crema text-marron
+  {% elif o.status == 'rechazado' or o.status == 'cancelado' %}bg-rosa-tierra text-rojo-vino
+  {% else %}bg-surface-dim text-texto{% endif %}">
+  <span aria-hidden="true">{% if o.status == 'pagado' %}●{% elif o.status == 'enviado' %}✓{% elif o.status == 'en_proceso' %}◐{% elif o.status == 'rechazado' or o.status == 'cancelado' %}✕{% else %}○{% endif %}</span>
+  {{ o.get_status_display }}
+</span>

@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static %}
+{% comment %}Equivale a src/app/origenes/page.tsx{% endcomment %}
+
+{% block title %}Orígenes — Viati Café{% endblock %}
+{% block description %}Conoce las regiones de donde provienen nuestros cafés de especialidad. Togüí, Socorro y Moniquirá: tres territorios, tres perfiles únicos. Explora la geografía del sabor colombiano.{% endblock %}
+{% block og_title %}Orígenes | Viati Café{% endblock %}
+{% block og_description %}Un viaje sensorial por Boyacá y Santander. Conoce El Paraíso, Heroico y Oromiel: tres cafés de especialidad con identidad propia.{% endblock %}
+
+{% block content %}
+<header class="relative w-full min-h-[70vh] flex items-center justify-center overflow-hidden bg-verde-oscuro section-dark">
+  <div class="absolute inset-0 z-0">
+    <img src="{% static 'images/origenes/hero-origenes.jpg' %}" alt="" fetchpriority="high" decoding="async"
+         class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-100">
+  </div>
+  <div class="relative z-10 text-center container-viati">
+    <span class="text-crema font-nav text-xs font-bold uppercase tracking-[0.2em] mb-4 block">
+      Herencia Agrícola
+    </span>
+    <h1 class="font-titulo font-bold text-blanco text-4xl md:text-5xl lg:text-6xl leading-tight mb-6 max-w-4xl mx-auto">
+      Nuestros Orígenes
+    </h1>
+    <p class="font-cuerpo text-lg text-blanco/90 max-w-2xl mx-auto leading-relaxed">
+      Un viaje sensorial a través de las montañas de Boyacá y Santander,
+      donde las brumas matutinas y los suelos fértiles cultivan el
+      carácter de nuestros cafés de autor.
+    </p>
+  </div>
+</header>
+
+<section class="py-20 md:py-28 overflow-hidden bg-off-white">
+  <div class="grain-overlay"></div>
+  <div class="container-viati relative z-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <div class="relative h-[400px] rounded-2xl overflow-hidden bg-surface-container-low border border-beige/30 order-2 md:order-1">
+        <img src="{% static 'images/origenes/mapa.jpg' %}" alt="Mapa de orígenes: Boyacá y Santander"
+             loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-contain p-6">
+      </div>
+      <div class="order-1 md:order-2">
+        <span class="text-naranja-oscuro font-nav text-xs font-bold uppercase tracking-[0.2em] block mb-4">
+          Geografía del Sabor
+        </span>
+        <h2 class="font-titulo font-bold text-verde-oscuro text-3xl md:text-4xl mb-6">
+          Tierra, Altitud y Tradición
+        </h2>
+        <p class="font-cuerpo text-texto-claro leading-relaxed">
+          Nuestra selección de orígenes no es casual. Buscamos microclimas
+          específicos en la cordillera oriental colombiana, donde la
+          combinación de suelos volcánicos, sombras naturales y altitud
+          generan perfiles de taza excepcionales y memorables.
+        </p>
+        <div class="flex gap-6 pt-6 mt-6 border-t border-beige/30">
+          <div class="flex items-center gap-2 text-verde-oscuro">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-naranja" aria-hidden="true">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+            </svg>
+            <span class="font-nav text-xs font-bold uppercase tracking-wider">
+              Alta Montaña
+            </span>
+          </div>
+          <div class="flex items-center gap-2 text-verde-oscuro">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-naranja" aria-hidden="true">
+              <path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 008 20C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75" />
+            </svg>
+            <span class="font-nav text-xs font-bold uppercase tracking-wider">
+              Cultivo bajo Sombra
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-20 md:py-28 bg-blanco">
+  <div class="container-viati">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {% for origen in origenes %}
+      <a href="{% url 'origen_detalle' origen.slug %}"
+         class="group bg-blanco rounded-2xl overflow-hidden border border-beige/30 shadow-sm shadow-verde-oscuro/5 transition-viati hover:-translate-y-1 hover:shadow-md hover:shadow-verde-oscuro/10">
+        <div class="aspect-[4/3] relative overflow-hidden bg-off-white">
+          <img src="{{ origen.image_url }}" alt="{{ origen.name }}" loading="lazy" decoding="async"
+               class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          <span class="absolute top-3 left-3 bg-verde-oscuro text-crema text-[10px] font-nav font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
+            {{ origen.region }}
+          </span>
+        </div>
+        <div class="p-5">
+          <h3 class="font-titulo font-bold text-lg text-verde-header">
+            {{ origen.name }}
+          </h3>
+          <p class="font-cuerpo text-texto-claro text-sm mt-1 line-clamp-2">
+            {{ origen.description }}
+          </p>
+          <span class="inline-block mt-3 text-verde-header text-xs font-nav font-bold uppercase tracking-wider hover:text-naranja transition-viati">
+            Explorar &rsaquo;
+          </span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

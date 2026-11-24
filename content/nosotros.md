@@ -1,0 +1,75 @@
+---
+hero:
+  title: "Nuestra Historia"
+  description: "Arraigados en el corazón de Togüí, Boyacá. Una herencia familiar que transforma el grano en arte y la tierra en esperanza."
+  image: "/images/nosotros/hero-finca.jpg"
+historia:
+  tag: "Tradición Familiar"
+  title: "Finca La Lupita"
+  paragraphs:
+    - "Nuestra historia nace en la Finca La Lupita, donde tres generaciones han dedicado su vida al cultivo del café. Más que una empresa, somos una extensión de la tierra colombiana, comprometidos con la excelencia desde la semilla hasta la taza."
+    - "Nuestra misión trasciende nuestras fronteras. Buscamos promover la equidad y el desarrollo rural mediante la compra de café pergamino a pequeños productores locales de Boyacá y Santander, garantizando precios justos que valoran el esfuerzo de las manos campesinas."
+  quote: "El café es el alma de nuestra tierra."
+procesos:
+  tag: "Excelencia en cada paso"
+  title: "Nuestros Procesos"
+  items:
+    - title: "Variedad"
+      icon: "plant"
+      description: "Contamos con 2 hectáreas de variedad Castillo y lotes experimentales de Geisha, buscando siempre perfiles de taza excepcionales."
+    - title: "Sostenibilidad"
+      icon: "water"
+      description: "Implementamos tecnología de bajo consumo de agua en el despulpado para proteger nuestras fuentes hídricas naturales."
+    - title: "Selección Manual"
+      icon: "hand"
+      description: "Cada grano es seleccionado rigurosamente a mano por expertos, asegurando que solo lo mejor llegue a la fase de secado."
+  featured:
+    - title: "Planta de Producción"
+      description: "Laboratorio propio para catación, trilla y clasificación por tamaño y densidad, garantizando consistencia absoluta."
+      image: "/images/nosotros/produccion-frame.jpg"
+      bg: "dark"
+    - title: "Tostión de Autor"
+      description: "Realizamos la tostión en el sitio para controlar cada curva de calor, extrayendo las notas más profundas de chocolate y panela."
+      image: "/images/nosotros/tostion.jpeg"
+      bg: "orange"
+galeria:
+  items:
+    - src: "/images/nosotros/Galeria/IMG_4991.jpg"
+      alt: "Selección de bolsas de café Viati Café"
+      span: "large"
+    - src: "/images/nosotros/Galeria/DSCN5443%20(1).jpg"
+      alt: "Plantaciones de café en las montañas de Boyacá"
+      span: "small"
+    - src: "/images/nosotros/Galeria/IMG-20240401-WA0003.jpg"
+      alt: "Proceso de selección manual"
+      span: "small"
+    - src: "/images/nosotros/Galeria/WhatsApp%20Image%202024-11-19%20at%206.jpg"
+      alt: "Caficultor en la finca"
+      span: "small"
+    - src: "/images/nosotros/Galeria/WhatsApp%20Image%202023-12-18%20at%2012.jpg"
+      alt: "Granos de café verde en manos de caficultor"
+      span: "small"
+carrusel:
+  items:
+    - src: "/images/nosotros/Carrusel/DSCN5536.jpg"
+      alt: "Vista de la Finca La Lupita"
+    - src: "/images/nosotros/Carrusel/WhatsApp%20Image%202025-01-12%20at%2012.01.25%20PM.jpeg"
+      alt: "Trabajo en la finca"
+    - src: "/images/nosotros/Carrusel/WhatsApp%20Image%202024-12-12%20at%203.jpg"
+      alt: "Cosecha en Togüí"
+valores:
+  title: "Nuestros Valores"
+  items:
+    - title: "Integridad"
+      icon: "verified"
+      description: "Honramos nuestra palabra y nuestra tierra en cada transacción."
+    - title: "Comunidad"
+      icon: "groups"
+      description: "Crecemos de la mano con nuestros vecinos y familias cafeteras."
+    - title: "Respeto Ambiental"
+      icon: "eco"
+      description: "Cultivamos con consciencia para asegurar el futuro de Togüí."
+  quote: "Una herencia que se sirve caliente."
+  cta: "Visítanos en Finca La Lupita"
+  ctaUrl: "/contactanos"
+---

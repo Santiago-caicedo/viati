@@ -1,0 +1,38 @@
+{% comment %}
+Equivale a Carrusel.tsx. Parámetros: items = lista de {url, alt}, class = clases extra.
+static/js/paginas.js anima el cambio (deslizamiento 0.5 s) y avanza cada 5 s.
+{% endcomment %}
+<div class="relative aspect-[4/3] rounded-2xl overflow-hidden {{ class }}" data-carrusel>
+  {% for item in items %}
+  <div class="absolute inset-0" data-slide
+       {% if not forloop.first %}style="opacity:0;visibility:hidden" aria-hidden="true"{% endif %}>
+    <img src="{{ item.url }}" alt="{{ item.alt }}" loading="lazy" decoding="async"
+         class="absolute inset-0 w-full h-full object-cover">
+  </div>
+  {% endfor %}
+
+  <div class="absolute inset-x-0 bottom-0 z-10 flex items-center justify-center gap-2 pb-4"
+       data-active-class="w-8 h-2.5 bg-naranja"
+       data-inactive-class="w-2.5 h-2.5 bg-blanco/60 hover:bg-blanco/80">
+    {% for item in items %}
+    <button type="button" data-dot="{{ forloop.counter0 }}"
+            class="rounded-full transition-all duration-300 {% if forloop.first %}w-8 h-2.5 bg-naranja{% else %}w-2.5 h-2.5 bg-blanco/60 hover:bg-blanco/80{% endif %}"
+            aria-label="Ir a imagen {{ forloop.counter }}"></button>
+    {% endfor %}
+  </div>
+
+  <button type="button" data-prev
+          class="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-blanco/20 backdrop-blur-sm text-blanco flex items-center justify-center hover:bg-blanco/40 transition-all"
+          aria-label="Anterior imagen">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4" aria-hidden="true">
+      <polyline points="15 18 9 12 15 6" />
+    </svg>
+  </button>
+  <button type="button" data-next
+          class="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-blanco/20 backdrop-blur-sm text-blanco flex items-center justify-center hover:bg-blanco/40 transition-all"
+          aria-label="Siguiente imagen">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4" aria-hidden="true">
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  </button>
+</div>

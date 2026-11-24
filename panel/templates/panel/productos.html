@@ -1,0 +1,46 @@
+{% extends "panel/base.html" %}
+{% load viati %}
+{% block title %}Productos{% endblock %}
+{% block seccion_tag %}Catálogo{% endblock %}
+{% block heading %}Productos{% endblock %}
+{% block acciones %}
+<a href="{% url 'panel:producto_nuevo' %}" class="rounded-full bg-naranja px-5 py-2.5 font-nav text-xs font-bold uppercase tracking-wider text-blanco hover:bg-naranja-hover transition-colors">+ Nuevo producto</a>
+{% endblock %}
+
+{% block content %}
+{% if odoo_activo %}
+<div class="mb-6 rounded-xl bg-crema px-4 py-3 text-sm text-marron" role="status">
+  <strong>Odoo está conectado:</strong> los productos marcados «Odoo» se actualizan solos y lo que cambies aquí se sobrescribe.
+  {% if odoo_estado %}Última sincronización: {{ odoo_estado.started_at|date:"j M, g:i a" }} · {% if odoo_estado.ok %}✓ {{ odoo_estado.message }}{% else %}⚠️ {{ odoo_estado.message }}{% endif %}{% endif %}
+</div>
+{% endif %}
+
+<div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+  {% for p in productos %}
+  <article class="flex gap-4 rounded-2xl bg-blanco p-4 shadow-sm {% if not p.active %}opacity-60{% endif %}">
+    <img src="{{ p.image_url }}" alt="" width="88" height="88" loading="lazy" class="h-22 w-22 shrink-0 rounded-xl bg-off-white object-contain">
+    <div class="min-w-0 flex-1">
+      <div class="flex flex-wrap items-center gap-1.5">
+        <h2 class="font-titulo text-lg font-bold leading-tight text-verde-oscuro">{{ p.name }}</h2>
+        {% if p.featured %}<span class="rounded-full bg-melon px-2 py-0.5 text-[10px] font-bold uppercase text-rojo-vino">★ Destacado</span>{% endif %}
+        {% if p.odoo_id %}<span class="rounded-full bg-salvia-claro px-2 py-0.5 text-[10px] font-bold uppercase text-verde-oscuro">Odoo</span>{% endif %}
+      </div>
+      <p class="text-xs text-texto-claro">{{ p.category }}{% if p.origin %} · {{ p.origin }}{% endif %}</p>
+      <p class="mt-1 text-sm font-bold tabular-nums">
+        {% if p.size_list %}{% for s in p.size_list %}{{ s.name }} {{ s.price|cop }}{% if not forloop.last %} · {% endif %}{% endfor %}{% else %}{{ p.price|cop }}{% endif %}
+      </p>
+      <p class="text-xs {% if p.active %}text-verde-oscuro{% else %}text-rojo-vino{% endif %}">{% if p.active %}● Visible en la tienda{% else %}○ Oculto{% endif %}</p>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <a href="{% url 'panel:producto_editar' p.pk %}" class="rounded-full bg-verde-oscuro px-4 py-1.5 font-nav text-[11px] font-bold uppercase tracking-wider text-crema hover:bg-naranja transition-colors">Editar</a>
+        <form method="post" action="{% url 'panel:producto_visible' p.pk %}">{% csrf_token %}
+          <button class="rounded-full border border-beige px-4 py-1.5 font-nav text-[11px] font-bold uppercase tracking-wider text-verde-oscuro hover:border-naranja">{% if p.active %}Ocultar{% else %}Mostrar{% endif %}</button>
+        </form>
+        <a href="{{ p.get_absolute_url }}" target="_blank" rel="noopener" class="rounded-full px-2 py-1.5 text-[11px] text-texto-claro hover:text-naranja-oscuro">Ver ↗</a>
+      </div>
+    </div>
+  </article>
+  {% empty %}
+  <p class="text-texto-claro">No hay productos todavía.</p>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+{% load static %}
+{% comment %}Equivale a src/app/nosotros/page.tsx (contenido en content/nosotros.md){% endcomment %}
+
+{% block title %}Nosotros — Viati Café{% endblock %}
+{% block description %}Conoce la historia de Viati Café, una empresa familiar en Togüí, Boyacá. Finca La Lupita, procesos artesanales de cultivo y tostión, y cafés de especialidad colombianos con trazabilidad total.{% endblock %}
+{% block og_title %}Nosotros | Viati Café{% endblock %}
+{% block og_description %}La historia de Viati Café: tradición familiar, Finca La Lupita, cultivo sostenible y procesos artesanales en Boyacá, Colombia.{% endblock %}
+
+{% block content %}
+{# ═══ 1. HERO ═══ #}
+<section class="relative w-full min-h-[80vh] flex items-center justify-center overflow-hidden section-dark">
+  <div class="absolute inset-0 z-0">
+    <img src="{{ data.hero.image_url }}" alt="{{ data.hero.title }}" fetchpriority="high" decoding="async"
+         class="absolute inset-0 w-full h-full object-cover">
+    <div class="absolute inset-0 bg-gradient-to-b from-verde-oscuro/40 to-verde-oscuro/80"></div>
+  </div>
+  <div class="relative z-10 text-center container-viati">
+    <div data-reveal="up">
+      <h1 class="font-titulo font-bold text-blanco text-4xl md:text-5xl lg:text-6xl leading-tight mb-6 max-w-3xl mx-auto">
+        {{ data.hero.title }}
+      </h1>
+    </div>
+    <div data-reveal="up" style="--reveal-delay:.15s">
+      <p class="font-cuerpo text-lg text-blanco/90 max-w-2xl mx-auto leading-relaxed">
+        {{ data.hero.description }}
+      </p>
+    </div>
+    <div data-reveal="up" style="--reveal-delay:.3s">
+      <div class="mt-12 animate-bounce">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 mx-auto text-crema" aria-hidden="true">
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ═══ 2. FINCA LA LUPITA ═══ #}
+<section class="py-20 md:py-28 bg-off-white relative overflow-hidden">
+  <div class="grain-overlay"></div>
+  <div class="container-viati relative z-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div data-reveal="left">
+        <span class="text-naranja-oscuro font-nav text-xs font-bold uppercase tracking-[0.2em] block mb-4">
+          {{ data.historia.tag }}
+        </span>
+        <h2 class="font-titulo font-bold text-verde-oscuro text-3xl md:text-4xl mb-6">
+          {{ data.historia.title }}
+        </h2>
+        <div class="w-16 h-0.5 bg-naranja-oscuro mb-6"></div>
+        {% for p in data.historia.paragraphs %}
+        <p class="font-cuerpo text-texto-claro leading-relaxed mb-4 last:mb-0">
+          {{ p }}
+        </p>
+        {% endfor %}
+      </div>
+      <div data-reveal="right" style="--reveal-delay:.15s">
+        <div class="relative">
+          {% include "paginas/partials/carrusel.html" with items=data.carrusel.items class="" %}
+          <div class="absolute -bottom-6 -right-4 md:-bottom-8 md:-right-8 p-4 md:p-6 bg-blanco shadow-lg shadow-verde-oscuro/10 border border-beige/30 rounded-xl max-w-[260px] hidden lg:block">
+            <p class="font-titulo font-bold text-verde-oscuro text-lg italic leading-snug">
+              &ldquo;{{ data.historia.quote }}&rdquo;
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ═══ 3. NUESTROS PROCESOS ═══ #}
+<section class="py-20 md:py-28 bg-surface-container-low">
+  <div class="container-viati">
+    <div data-reveal="up">
+      <div class="text-center mb-16">
+        <span class="text-naranja-oscuro font-nav text-xs font-bold uppercase tracking-[0.2em] block mb-4">
+          {{ data.procesos.tag }}
+        </span>
+        <h2 class="font-titulo font-bold text-verde-oscuro text-3xl md:text-4xl">
+          {{ data.procesos.title }}
+        </h2>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      {% for item in data.procesos.items %}
+      <div data-reveal="up" style="--reveal-delay:.{{ forloop.counter0 }}s">
+        <div class="bg-blanco p-8 rounded-2xl border border-beige/30 shadow-sm shadow-verde-oscuro/5 group hover:border-naranja-oscuro/30 transition-viati">
+          <div class="w-12 h-12 rounded-xl bg-naranja-oscuro/10 text-naranja-oscuro flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+            {% if item.icon == "plant" %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8" aria-hidden="true">
+              <path d="M12 22v-4l-3-3c-1.5-1.5-2-3.5-2-5 0-2.5 2-5 5-5s5 2.5 5 5c0 1.5-.5 3.5-2 5l-3 3v4" />
+              <path d="M12 2v6" />
+            </svg>
+            {% elif item.icon == "water" %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8" aria-hidden="true">
+              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+            </svg>
+            {% elif item.icon == "hand" %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8" aria-hidden="true">
+              <path d="M18 11V6a2 2 0 0 0-4 0v1" />
+              <path d="M14 10V4a2 2 0 0 0-4 0v6" />
+              <path d="M10 10.5V6a2 2 0 0 0-4 0v8" />
+              <path d="M18 8a2 2 0 0 1 4 0v6a8 8 0 0 1-8 8h-2c-2.21 0-4.21-.9-5.66-2.34L3.5 14.5a1.5 1.5 0 0 1 2.12-2.12L6 13V6" />
+            </svg>
+            {% endif %}
+          </div>
+          <h3 class="font-titulo font-bold text-verde-header text-xl mb-3">
+            {{ item.title }}
+          </h3>
+          <p class="font-cuerpo text-texto-claro leading-relaxed text-sm">
+            {{ item.description }}
+          </p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {% for feat in data.procesos.featured %}
+      <div data-reveal="up" style="--reveal-delay:{% if forloop.first %}.3{% else %}.4{% endif %}s">
+        <div class="relative min-h-[350px] flex flex-col justify-end p-8 md:p-10 rounded-2xl overflow-hidden group {% if feat.bg == 'orange' %}bg-naranja-oscuro{% else %}bg-verde-header{% endif %}">
+          <div class="absolute inset-0 opacity-30 mix-blend-overlay">
+            <img src="{{ feat.image_url }}" alt="{{ feat.title }}" loading="lazy" decoding="async"
+                 class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+          </div>
+          <div class="relative z-10 section-dark">
+            <h3 class="font-titulo font-bold text-2xl md:text-3xl mb-3">
+              {{ feat.title }}
+            </h3>
+            <p class="font-cuerpo text-blanco/80 max-w-md leading-relaxed">
+              {{ feat.description }}
+            </p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# ═══ 4. GALERÍA ═══ #}
+<section class="py-20 md:py-28 bg-blanco">
+  <div class="container-viati">
+    <div data-reveal="up">
+      <div class="text-center mb-12">
+        <span class="text-naranja-oscuro font-nav text-xs font-bold uppercase tracking-[0.2em] block mb-4">
+          La Finca
+        </span>
+        <h2 class="font-titulo font-bold text-verde-oscuro text-3xl md:text-4xl">
+          Galería
+        </h2>
+      </div>
+    </div>
+
+    {% include "paginas/partials/gallery_lightbox.html" with images=data.galeria.items %}
+  </div>
+</section>
+
+{# ═══ 5. VALORES ═══ #}
+<section class="py-20 md:py-28 bg-verde-header text-blanco relative overflow-hidden section-dark">
+  <div class="absolute right-0 bottom-0 opacity-10 pointer-events-none">
+    <svg viewBox="0 0 200 200" fill="currentColor" class="w-80 h-80 text-crema" aria-hidden="true">
+      <path d="M100 10C45 10 10 55 10 100c0 45 35 90 90 90 55 0 90-45 90-90 0-45-35-90-90-90zm0 30c20 0 35 15 35 35 0 25-25 45-35 55-10-10-35-30-35-55 0-20 15-35 35-35z" />
+    </svg>
+  </div>
+  <div class="container-viati relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <div data-reveal="left">
+        <h2 class="font-titulo font-bold text-blanco text-3xl md:text-4xl mb-10">
+          {{ data.valores.title }}
+        </h2>
+        <ul class="space-y-8">
+          {% for item in data.valores.items %}
+          <li class="flex gap-5">
+            <span class="text-crema shrink-0 mt-1">
+              {% if item.icon == "verified" %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 shrink-0" aria-hidden="true">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+              {% elif item.icon == "groups" %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 shrink-0" aria-hidden="true">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              {% elif item.icon == "eco" %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 shrink-0" aria-hidden="true">
+                <path d="M12 22c-4-3-8-7-8-13a8 8 0 0 1 16 0c0 6-4 10-8 13z" />
+                <path d="M12 2v20" />
+                <path d="M8 8c2-1 4-1 6 0" />
+                <path d="M8 12c2-1 4-1 6 0" />
+              </svg>
+              {% endif %}
+            </span>
+            <div>
+              <h4 class="font-nav font-bold text-sm uppercase tracking-wider text-crema mb-1">
+                {{ item.title }}
+              </h4>
+              <p class="font-cuerpo text-blanco/70 leading-relaxed">
+                {{ item.description }}
+              </p>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div data-reveal="right" style="--reveal-delay:.15s">
+        <div class="bg-verde-oscuro/50 p-8 md:p-12 rounded-2xl border border-crema/10">
+          <h3 class="font-titulo font-bold text-2xl md:text-3xl text-crema italic mb-6 leading-snug">
+            &ldquo;{{ data.valores.quote }}&rdquo;
+          </h3>
+          <p class="font-cuerpo text-blanco/80 leading-relaxed mb-8">
+            Te invitamos a ser parte de esta historia, a saborear el
+            esfuerzo de todo un pueblo y a llevar contigo un pedazo de
+            Boyacá.
+          </p>
+          <a href="{{ data.valores.ctaUrl }}"
+             class="inline-block border-2 border-crema/40 text-crema px-8 py-3.5 rounded-full font-nav text-sm font-bold uppercase tracking-wider hover:bg-crema hover:text-verde-header transition-all active:scale-[0.98]">
+            {{ data.valores.cta }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}<script src="{% static 'js/paginas.js' %}" defer></script>{% endblock %}

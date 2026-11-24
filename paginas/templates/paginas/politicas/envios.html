@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% comment %}Equivale a src/app/politicas/envios/page.tsx{% endcomment %}
+
+{% block title %}Política de Envíos — Viati Café{% endblock %}
+{% block description %}Conoce las opciones de envío nacional e internacional de {{ SITE.nombre }}. Tiempos de entrega, costos de envío, cobertura y seguimiento de pedidos para café de especialidad colombiano.{% endblock %}
+{% block og_title %}Política de Envíos | Viati Café{% endblock %}
+{% block og_description %}Información de envíos nacionales e internacionales de {{ SITE.nombre }}. Plazos, costos y cobertura para recibir tu café de especialidad.{% endblock %}
+
+{% block content %}
+<div class="flex-1">
+  {% include "paginas/politicas/_hero.html" with titulo="Envíos" texto="Toda la información sobre tiempos de entrega, costos y cobertura para que recibas tu café de especialidad donde quieras." %}
+
+  <section class="py-16 md:py-20 bg-blanco">
+    <div class="container-viati max-w-3xl">
+      <div class="space-y-12">
+        {# Nacionales #}
+        <div>
+          <h2 class="font-titulo font-bold text-verde-oscuro text-2xl md:text-3xl mb-4">
+            Envíos Nacionales
+          </h2>
+          <p class="font-cuerpo text-texto/80 leading-relaxed mb-4">
+            Realizamos envíos a todo el territorio colombiano a través de
+            operadores logísticos aliados con amplia cobertura nacional.
+            Trabajamos con servicios de mensajería certificados que
+            garantizan la trazabilidad de tu pedido.
+          </p>
+          <ul class="space-y-3 font-cuerpo text-texto/80">
+            <li class="flex items-start gap-3">
+              <span class="text-naranja mt-1 shrink-0">•</span>
+              <span>
+                <strong>Cobertura:</strong> Bogotá, Bucaramanga, Medellín,
+                Cali, Barranquilla, y más de 500 municipios a nivel
+                nacional.
+              </span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-naranja mt-1 shrink-0">•</span>
+              <span>
+                <strong>Plazo de entrega:</strong> 2 a 5 días hábiles
+                dependiendo de la ubicación.
+              </span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-naranja mt-1 shrink-0">•</span>
+              <span>
+                <strong>Costo:</strong> Se calcula al momento del checkout
+                según el peso del pedido y el destino.
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        {# Internacionales #}
+        <div>
+          <h2 class="font-titulo font-bold text-verde-oscuro text-2xl md:text-3xl mb-4">
+            Envíos Internacionales
+          </h2>
+          <p class="font-cuerpo text-texto/80 leading-relaxed mb-4">
+            Llevamos el sabor de Boyacá y Santander a cualquier lugar del
+            mundo. Nuestros envíos internacionales se realizan con
+            operadores logísticos especializados en comercio exterior.
+          </p>
+          <ul class="space-y-3 font-cuerpo text-texto/80">
+            <li class="flex items-start gap-3">
+              <span class="text-naranja mt-1 shrink-0">•</span>
+              <span>
+                <strong>Cobertura:</strong> Estados Unidos, Europa, Asia y
+                América Latina.
+              </span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-naranja mt-1 shrink-0">•</span>
+              <span>
+                <strong>Plazo de entrega:</strong> 7 a 15 días hábiles
+                dependiendo del país de destino y el courier seleccionado.
+              </span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-naranja mt-1 shrink-0">•</span>
+              <span>
+                <strong>Costo:</strong> Se calcula automáticamente en el
+                checkout según peso, dimensiones y destino.
+              </span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-naranja mt-1 shrink-0">•</span>
+              <span>
+                <strong>Aduana:</strong> El cliente es responsable de los
+                impuestos y aranceles de importación del país de destino.
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        {# Empaque #}
+        <div>
+          <h2 class="font-titulo font-bold text-verde-oscuro text-2xl md:text-3xl mb-4">
+            Empaque y Conservación
+          </h2>
+          <p class="font-cuerpo text-texto/80 leading-relaxed">
+            Todos nuestros productos se empacan cuidadosamente para
+            garantizar que lleguen en óptimas condiciones. Utilizamos bolsas
+            con válvula desgasificadora para preservar la frescura del café
+            tostado, y nuestros envíos cuentan con embalaje protector contra
+            golpes y cambios de temperatura.
+          </p>
+        </div>
+
+        {# Seguimiento #}
+        <div>
+          <h2 class="font-titulo font-bold text-verde-oscuro text-2xl md:text-3xl mb-4">
+            Seguimiento de Pedidos
+          </h2>
+          <p class="font-cuerpo text-texto/80 leading-relaxed">
+            Una vez realizado el envío, recibirás un correo electrónico con
+            el número de guía y el enlace para hacer seguimiento en línea
+            de tu pedido. Si tienes alguna duda sobre el estado de tu
+            envío, escríbenos a
+            <a href="mailto:gerencia@agroambientec.com" class="text-naranja hover:text-naranja-oscuro transition-colors">gerencia@agroambientec.com</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,300 @@
+{% extends "admin/base_site.html" %}
+{% load viati humanize %}
+
+{% block title %}Estadísticas | {{ site_title }}{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+  /* Usa los colores del admin (claro/oscuro); solo la barra tiene color propio. */
+  .vc-stats { --vc-bar: #C5562A; --vc-gap: 12px; max-width: 1200px; }
+  @media (prefers-color-scheme: dark) { html[data-theme="auto"] .vc-stats { --vc-bar: #D9692F; } }
+  html[data-theme="dark"] .vc-stats { --vc-bar: #D9692F; }
+
+  .vc-stats h2 { font-size: 1.05rem; margin: 28px 0 10px; color: var(--body-fg); }
+  .vc-stats .vc-sub { color: var(--body-quiet-color); font-size: .85rem; margin: -4px 0 10px; }
+  .vc-filtros { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 4px 0 6px; }
+  .vc-filtros a { padding: 6px 12px; border: 1px solid var(--hairline-color); border-radius: 16px; text-decoration: none; color: var(--body-fg); font-size: .85rem; }
+  .vc-filtros a.activo { background: var(--primary); border-color: var(--primary); color: var(--primary-fg); }
+
+  .vc-grid { display: grid; gap: var(--vc-gap); grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+  .vc-card { border: 1px solid var(--hairline-color); border-radius: 8px; padding: 14px 16px; background: var(--body-bg); }
+  .vc-card .vc-etq { color: var(--body-quiet-color); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
+  .vc-card .vc-num { font-size: 1.7rem; font-weight: 600; color: var(--body-fg); margin: 4px 0 2px; font-variant-numeric: tabular-nums; }
+  .vc-card .vc-det { color: var(--body-quiet-color); font-size: .82rem; }
+  .vc-card.alerta { border-left: 4px solid var(--message-warning-bg, #ffc); }
+  a.vc-card, a.vc-card * { text-decoration: none; }
+  a.vc-card .vc-num { color: var(--body-fg); }
+  a.vc-card:hover { border-color: var(--link-fg); }
+
+  /* Gráfica de barras (una sola serie: ingresos por día) */
+  .vc-chart { border: 1px solid var(--hairline-color); border-radius: 8px; padding: 16px 16px 8px; }
+  .vc-plot { position: relative; height: 200px; display: flex; align-items: flex-end; gap: 2px; border-bottom: 1px solid var(--hairline-color); }
+  .vc-col { position: relative; flex: 1 1 0; height: 100%; display: flex; align-items: flex-end; cursor: default; }
+  .vc-col:hover { background: var(--darkened-bg); }
+  .vc-bar { width: 100%; background: var(--vc-bar); border-radius: 4px 4px 0 0; min-height: 0; }
+  .vc-bar.cero { height: 0 !important; }
+  .vc-tip { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); white-space: nowrap;
+            background: var(--body-fg); color: var(--body-bg); padding: 6px 8px; border-radius: 6px; font-size: .78rem; z-index: 5; pointer-events: none; }
+  .vc-col:hover .vc-tip, .vc-col:focus .vc-tip { display: block; }
+  .vc-col .vc-tip { bottom: auto; top: -46px; }
+  .vc-maxlabel { position: absolute; left: 50%; transform: translateX(-50%); font-size: .72rem; color: var(--body-quiet-color); white-space: nowrap; }
+  .vc-ejes { display: flex; justify-content: space-between; color: var(--body-quiet-color); font-size: .75rem; padding-top: 6px; }
+  .vc-vacio { padding: 30px 0; text-align: center; color: var(--body-quiet-color); }
+
+  .vc-dos { display: grid; gap: var(--vc-gap); grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
+  .vc-stats table { width: 100%; }
+  .vc-stats td.num, .vc-stats th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .vc-stats details { margin-top: 10px; }
+  .vc-stats details summary { cursor: pointer; color: var(--link-fg); font-size: .85rem; }
+  .vc-badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: .75rem; border: 1px solid var(--hairline-color); color: var(--body-fg); }
+  .vc-badge.tarde { border-color: currentColor; font-weight: 600; }
+  @media (max-width: 767px) { .vc-dos { grid-template-columns: 1fr; } .vc-stats .module { overflow-x: auto; } }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">Inicio</a> › Estadísticas
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="vc-stats">
+
+  {# ── Avisos que requieren acción ── #}
+  {% if por_enviar_total or correos_pendientes or revisar_n %}
+  <div class="vc-grid" style="margin-bottom:8px">
+    {% if por_enviar_total %}
+    <a class="vc-card alerta" href="{% url 'admin:carrito_order_changelist' %}?status__exact=pagado">
+      <div class="vc-etq">📦 Pagados por enviar</div>
+      <div class="vc-num">{{ por_enviar_total }}</div>
+      <div class="vc-det">Márcalos como enviados cuando salgan</div>
+    </a>
+    {% endif %}
+    {% if revisar_n %}
+    <a class="vc-card alerta" href="{% url 'admin:carrito_order_changelist' %}?status__exact=en_proceso">
+      <div class="vc-etq">⚠️ Pagos por revisar</div>
+      <div class="vc-num">{{ revisar_n }}</div>
+      <div class="vc-det">El monto pagado no coincide con el pedido</div>
+    </a>
+    {% endif %}
+    {% if correos_pendientes %}
+    <a class="vc-card alerta" href="{% url 'admin:carrito_order_changelist' %}?emails_sent__exact=0">
+      <div class="vc-etq">✉️ Correos sin enviar</div>
+      <div class="vc-num">{{ correos_pendientes }}</div>
+      <div class="vc-det">Pedidos pagados sin correo de confirmación</div>
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {# ── Resumen de ventas ── #}
+  <h2>Ventas</h2>
+  <p class="vc-sub">Pedidos pagados (incluye los ya enviados), por fecha de pago. Hora de Colombia.</p>
+  <div class="vc-grid">
+    {% for k in kpis %}
+    <div class="vc-card">
+      <div class="vc-etq">{{ k.titulo }}</div>
+      <div class="vc-num">{{ k.ingresos|cop }}</div>
+      <div class="vc-det">{{ k.pedidos }} pedido{{ k.pedidos|pluralize }}{% if k.pedidos %} · ticket promedio {{ k.ticket|cop }}{% endif %}</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {# ── Filtro de periodo ── #}
+  <h2>Periodo: {{ periodo_nombre|lower }}</h2>
+  <div class="vc-filtros" role="group" aria-label="Periodo">
+    {% for n, nombre in periodos.items %}
+      <a href="?dias={{ n }}" class="{% if n == dias %}activo{% endif %}">{{ nombre }}</a>
+    {% endfor %}
+  </div>
+  <p class="vc-sub">Del {{ desde|date:"j \d\e F \d\e Y"|lower }} al {{ hoy|date:"j \d\e F \d\e Y"|lower }}. Todo lo que sigue usa este periodo.</p>
+
+  <div class="vc-grid">
+    <div class="vc-card">
+      <div class="vc-etq">Ingresos del periodo</div>
+      <div class="vc-num">{{ periodo.ingresos|cop }}</div>
+      <div class="vc-det">{{ periodo.pedidos }} pedido{{ periodo.pedidos|pluralize }} · envíos cobrados {{ periodo.envios|cop }}</div>
+    </div>
+    <div class="vc-card">
+      <div class="vc-etq">Conversión del checkout</div>
+      <div class="vc-num">{% if conversion is None %}—{% else %}{{ conversion }} %{% endif %}</div>
+      <div class="vc-det">De {{ total_creados }} pedido{{ total_creados|pluralize }} creados, cuántos se pagaron</div>
+    </div>
+    <div class="vc-card">
+      <div class="vc-etq">Checkouts abandonados</div>
+      <div class="vc-num">{{ abandonados_n }}</div>
+      <div class="vc-det">{{ abandonados_valor|cop }} sin cobrar · {{ rechazados_n }} con pago rechazado</div>
+    </div>
+    <div class="vc-card">
+      <div class="vc-etq">Clientes</div>
+      <div class="vc-num">{{ total_clientes }}</div>
+      <div class="vc-det">{{ recurrentes }} han comprado más de una vez (histórico)</div>
+    </div>
+  </div>
+
+  {# ── Gráfica ── #}
+  <h2>Ingresos por día</h2>
+  <div class="vc-chart">
+    {% if serie_tiene_ventas %}
+    <div class="vc-plot" role="img" aria-label="Ingresos por día del periodo; el detalle está en la tabla de abajo">
+      {% for d in serie %}
+      <div class="vc-col" tabindex="0">
+        <div class="vc-bar{% if not d.ingresos %} cero{% endif %}" style="height:{{ d.altura|stringformat:'s'|cut:',' }}%"></div>
+        {% if d.es_max %}<span class="vc-maxlabel" style="bottom:calc({{ d.altura|stringformat:'s'|cut:',' }}% + 4px)">{{ d.ingresos|cop }}</span>{% endif %}
+        <span class="vc-tip">{{ d.dia|date:"D j M" }} · {{ d.ingresos|cop }} · {{ d.pedidos }} pedido{{ d.pedidos|pluralize }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="vc-ejes"><span>{{ desde|date:"j M" }}</span><span>{{ hoy|date:"j M" }}</span></div>
+    {% else %}
+    <div class="vc-vacio">Todavía no hay ventas pagadas en este periodo.</div>
+    {% endif %}
+    <details>
+      <summary>Ver como tabla</summary>
+      <table>
+        <thead><tr><th>Día</th><th class="num">Pedidos</th><th class="num">Ingresos</th></tr></thead>
+        <tbody>
+          {% for d in serie reversed %}{% if d.pedidos %}
+          <tr><td>{{ d.dia|date:"l j \d\e F"|lower }}</td><td class="num">{{ d.pedidos }}</td><td class="num">{{ d.ingresos|cop }}</td></tr>
+          {% endif %}{% empty %}{% endfor %}
+          {% if not serie_tiene_ventas %}<tr><td colspan="3">Sin ventas.</td></tr>{% endif %}
+        </tbody>
+      </table>
+    </details>
+  </div>
+
+  {# ── Pedidos por enviar ── #}
+  <h2>Pagados por enviar</h2>
+  <p class="vc-sub">Los más antiguos primero. Selecciónalos en Pedidos y usa la acción «Marcar como enviado».</p>
+  <div class="module">
+    <table>
+      <thead><tr><th>Pedido</th><th>Cliente</th><th>Destino</th><th class="num">Total</th><th>Pagado</th><th>Esperando</th></tr></thead>
+      <tbody>
+      {% for o in por_enviar %}
+        <tr>
+          <td><a href="{% url 'admin:carrito_order_change' o.pk %}">{{ o.number }}</a></td>
+          <td>{{ o.full_name }}<br><span class="vc-det" style="color:var(--body-quiet-color)">{{ o.phone }}</span></td>
+          <td>{{ o.city }}, {{ o.department }}</td>
+          <td class="num">{{ o.total|cop }}</td>
+          <td>{{ o.paid_at|date:"j M, g:i a" }}</td>
+          <td><span class="vc-badge{% if o.dias_esperando >= 2 %} tarde{% endif %}">{% if o.dias_esperando == 0 %}hoy{% else %}{{ o.dias_esperando }} día{{ o.dias_esperando|pluralize }}{% endif %}</span></td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="6">✅ No hay pedidos pagados pendientes de envío.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="vc-dos">
+    {# ── Productos más vendidos ── #}
+    <div>
+      <h2>Productos más vendidos</h2>
+      <div class="module">
+        <table>
+          <thead><tr><th>Producto</th><th class="num">Unidades</th><th class="num">Ingresos</th></tr></thead>
+          <tbody>
+          {% for p in top_productos %}
+            <tr><td>{{ p.product_name }}</td><td class="num">{{ p.unidades }}</td><td class="num">{{ p.ingresos|cop }}</td></tr>
+          {% empty %}
+            <tr><td colspan="3">Sin ventas en el periodo.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {# ── Presentaciones ── #}
+    <div>
+      <h2>Tamaños y moliendas</h2>
+      <div class="module">
+        <table>
+          <thead><tr><th>Producto</th><th>Presentación</th><th class="num">Unidades</th></tr></thead>
+          <tbody>
+          {% for p in top_presentaciones %}
+            <tr><td>{{ p.product_name }}</td><td>{{ p.size|default:"—" }}{% if p.grind %} · {{ p.grind }}{% endif %}</td><td class="num">{{ p.unidades }}</td></tr>
+          {% empty %}
+            <tr><td colspan="3">Sin ventas en el periodo.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {# ── Departamentos ── #}
+    <div>
+      <h2>Ventas por departamento</h2>
+      <div class="module">
+        <table>
+          <thead><tr><th>Departamento</th><th class="num">Pedidos</th><th class="num">Ingresos</th></tr></thead>
+          <tbody>
+          {% for d in por_departamento %}
+            <tr><td>{{ d.department }}</td><td class="num">{{ d.pedidos }}</td><td class="num">{{ d.ingresos|cop }}</td></tr>
+          {% empty %}
+            <tr><td colspan="3">Sin ventas en el periodo.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {# ── Ciudades ── #}
+    <div>
+      <h2>Ciudades con más pedidos</h2>
+      <div class="module">
+        <table>
+          <thead><tr><th>Ciudad</th><th class="num">Pedidos</th><th class="num">Ingresos</th></tr></thead>
+          <tbody>
+          {% for c in por_ciudad %}
+            <tr><td>{{ c.city }} <span style="color:var(--body-quiet-color)">({{ c.department }})</span></td><td class="num">{{ c.pedidos }}</td><td class="num">{{ c.ingresos|cop }}</td></tr>
+          {% empty %}
+            <tr><td colspan="3">Sin ventas en el periodo.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  {# ── Estados ── #}
+  <h2>Pedidos creados por estado</h2>
+  <div class="module">
+    <table>
+      <thead><tr><th>Estado</th><th class="num">Pedidos</th></tr></thead>
+      <tbody>
+      {% for e in por_estado %}
+        <tr><td><a href="{% url 'admin:carrito_order_changelist' %}?status__exact={{ e.codigo }}">{{ e.nombre }}</a></td><td class="num">{{ e.n }}</td></tr>
+      {% endfor %}
+      <tr><th>Total</th><th class="num">{{ total_creados }}</th></tr>
+      </tbody>
+    </table>
+  </div>
+
+  {# ── Abandonados ── #}
+  <h2>Checkouts abandonados recientes</h2>
+  <p class="vc-sub">Llenaron sus datos pero no pagaron (o el pago fue rechazado), hace más de 1 hora. Puedes escribirles para ayudarles a terminar la compra.</p>
+  <div class="module">
+    <table>
+      <thead><tr><th>Pedido</th><th>Cliente</th><th>Contacto</th><th class="num">Valor</th><th>Creado</th><th>Estado</th></tr></thead>
+      <tbody>
+      {% for o in ultimos_abandonados %}
+        <tr>
+          <td><a href="{% url 'admin:carrito_order_change' o.pk %}">{{ o.number }}</a></td>
+          <td>{{ o.full_name }}</td>
+          <td>{{ o.email }}<br>{{ o.phone }}</td>
+          <td class="num">{{ o.total|cop }}</td>
+          <td>{{ o.created_at|date:"j M, g:i a" }}</td>
+          <td>{{ o.get_status_display }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="6">No hay checkouts abandonados en el periodo.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <p class="vc-sub" style="margin-top:24px">El contenido de los carritos no se guarda (vive en el navegador de cada visitante); por eso se mide desde que el cliente llega al checkout.</p>
+</div>
+{% endblock %}

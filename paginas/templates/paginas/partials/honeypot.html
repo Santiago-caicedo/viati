@@ -1,0 +1,5 @@
+{# Campo trampa anti-spam: fuera de pantalla, invisible para personas y lectores de pantalla. #}
+<div aria-hidden="true" class="absolute -left-[9999px] top-auto w-px h-px overflow-hidden">
+  <label for="{{ prefix }}website">No llenar este campo</label>
+  <input id="{{ prefix }}website" name="website" type="text" tabindex="-1" autocomplete="off" value="">
+</div>

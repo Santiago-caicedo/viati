@@ -1,0 +1,12 @@
+{% load static %}{% if v == "badge" or v == "naranja" %}<a href="/" class="inline-block {{ class }}">
+  <img src="{% if v == 'naranja' %}{% static 'images/logo-naranja.png' %}{% else %}{% static 'images/logo.png' %}{% endif %}"
+       alt="{% if v == 'naranja' %}Viati Café{% else %}Logo Viati Café{% endif %}"
+       width="{{ bs }}" height="{{ bs }}" style="width:{{ bs }}px;height:{{ bs }}px" class="rounded-full object-contain">
+</a>{% else %}<a href="/" class="flex items-center gap-2.5 group {{ class }}">
+  <img src="{% static 'images/logo.png' %}" alt="Logo Viati Café" width="{{ bs }}" height="{{ bs }}"
+       style="width:{{ bs }}px;height:{{ bs }}px" class="rounded-full object-contain shrink-0">
+  <div class="flex flex-col leading-tight">
+    <span class="font-titulo font-bold uppercase tracking-wide text-verde-oscuro group-hover:text-verde-header transition-colors {% if s == 'sm' %}text-sm{% elif s == 'lg' %}text-lg{% else %}text-base{% endif %}">Viati Café</span>
+    <span class="font-cuerpo uppercase tracking-widest text-naranja-oscuro {% if s == 'sm' %}text-[9px]{% elif s == 'lg' %}text-xs{% else %}text-[11px]{% endif %}">Café de Especialidad</span>
+  </div>
+</a>{% endif %}

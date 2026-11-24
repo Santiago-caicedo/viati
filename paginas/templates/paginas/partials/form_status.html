@@ -1,0 +1,24 @@
+{% comment %}
+Mensajes de éxito / error de los formularios (AnimatePresence de ContactForm.tsx
+e InstitucionalForm.tsx). Van fuera del <form> como <template> para no alterar
+el espaciado space-y-6; paginas.js los inserta al final del formulario.
+Parámetros: success, error = textos.
+{% endcomment %}
+<template data-status="success">
+  <div class="flex items-center gap-3 p-4 rounded-xl bg-verde-oscuro text-blanco" role="status">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 shrink-0" aria-hidden="true">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+    <span class="font-cuerpo text-sm">{{ success }}</span>
+  </div>
+</template>
+<template data-status="error">
+  <div class="flex items-center gap-3 p-4 rounded-xl bg-naranja-oscuro text-blanco" role="alert">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 shrink-0" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="12" />
+      <line x1="12" y1="16" x2="12.01" y2="16" />
+    </svg>
+    <span class="font-cuerpo text-sm">{{ error }}</span>
+  </div>
+</template>

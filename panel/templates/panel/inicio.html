@@ -1,0 +1,181 @@
+{% extends "panel/base.html" %}
+{% load viati %}
+{% block title %}Estadísticas{% endblock %}
+{% block seccion_tag %}Resumen de la tienda{% endblock %}
+{% block heading %}Estadísticas{% endblock %}
+{% block acciones %}
+<div class="flex flex-wrap gap-1.5" role="group" aria-label="Periodo">
+  {% for n, nombre in periodos.items %}
+  <a href="?dias={{ n }}" class="rounded-full px-3.5 py-1.5 font-nav text-xs font-bold transition-colors {% if n == dias %}bg-verde-oscuro text-crema{% else %}border border-beige text-verde-oscuro hover:border-naranja hover:text-naranja-oscuro{% endif %}">{{ nombre }}</a>
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block content %}
+{# ── Avisos ── #}
+{% if por_enviar_total or revisar_n or correos_pendientes %}
+<div class="mb-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+  {% if por_enviar_total %}
+  <a href="{% url 'panel:pedidos' %}?estado=pagado" class="group rounded-2xl border-l-4 border-naranja bg-blanco p-5 shadow-sm hover:shadow-md transition-shadow">
+    <p class="font-nav text-[11px] font-bold uppercase tracking-wider text-naranja-oscuro">📦 Pagados por enviar</p>
+    <p class="mt-1 font-titulo text-3xl font-bold text-verde-oscuro">{{ por_enviar_total }}</p>
+    <p class="text-sm text-texto-claro group-hover:text-naranja-oscuro">Ver y marcar como enviados →</p>
+  </a>
+  {% endif %}
+  {% if revisar_n %}
+  <a href="{% url 'panel:pedidos' %}?estado=en_proceso" class="group rounded-2xl border-l-4 border-rojo-vino bg-blanco p-5 shadow-sm hover:shadow-md transition-shadow">
+    <p class="font-nav text-[11px] font-bold uppercase tracking-wider text-rojo-vino">⚠️ Pagos por revisar</p>
+    <p class="mt-1 font-titulo text-3xl font-bold text-verde-oscuro">{{ revisar_n }}</p>
+    <p class="text-sm text-texto-claro group-hover:text-naranja-oscuro">El monto pagado no coincide →</p>
+  </a>
+  {% endif %}
+  {% if correos_pendientes %}
+  <a href="{% url 'panel:pedidos' %}?estado=pagado" class="group rounded-2xl border-l-4 border-marron bg-blanco p-5 shadow-sm hover:shadow-md transition-shadow">
+    <p class="font-nav text-[11px] font-bold uppercase tracking-wider text-marron">✉️ Correos sin enviar</p>
+    <p class="mt-1 font-titulo text-3xl font-bold text-verde-oscuro">{{ correos_pendientes }}</p>
+    <p class="text-sm text-texto-claro group-hover:text-naranja-oscuro">Pedidos pagados sin confirmación →</p>
+  </a>
+  {% endif %}
+</div>
+{% endif %}
+
+{# ── Ventas ── #}
+<section aria-labelledby="t-ventas">
+  <h2 id="t-ventas" class="font-titulo text-xl font-bold text-verde-oscuro">Ventas</h2>
+  <p class="text-sm text-texto-claro">Pedidos pagados (incluye los enviados), por fecha de pago · hora de Colombia.</p>
+  <div class="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    {% for k in kpis %}
+    <div class="rounded-2xl {% if forloop.first %}bg-verde-oscuro text-crema{% else %}bg-blanco{% endif %} p-5 shadow-sm">
+      <p class="font-nav text-[11px] font-bold uppercase tracking-wider {% if forloop.first %}text-crema/70{% else %}text-texto-claro{% endif %}">{{ k.titulo }}</p>
+      <p class="mt-1 font-titulo text-3xl font-bold {% if not forloop.first %}text-verde-oscuro{% endif %} tabular-nums">{{ k.ingresos|cop }}</p>
+      <p class="mt-1 text-sm {% if forloop.first %}text-crema/80{% else %}text-texto-claro{% endif %}">{{ k.pedidos }} pedido{{ k.pedidos|pluralize }}{% if k.pedidos %} · ticket {{ k.ticket|cop }}{% endif %}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{# ── Periodo ── #}
+<section class="mt-10" aria-labelledby="t-periodo">
+  <h2 id="t-periodo" class="font-titulo text-xl font-bold text-verde-oscuro">{{ periodo_nombre }}</h2>
+  <p class="text-sm text-texto-claro">Del {{ desde|date:"j \d\e F"|lower }} al {{ hoy|date:"j \d\e F \d\e Y"|lower }}.</p>
+  <div class="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="rounded-2xl bg-blanco p-5 shadow-sm">
+      <p class="font-nav text-[11px] font-bold uppercase tracking-wider text-texto-claro">Ingresos del periodo</p>
+      <p class="mt-1 font-titulo text-3xl font-bold text-verde-oscuro tabular-nums">{{ periodo.ingresos|cop }}</p>
+      <p class="mt-1 text-sm text-texto-claro">{{ periodo.pedidos }} pedido{{ periodo.pedidos|pluralize }} · envíos {{ periodo.envios|cop }}</p>
+    </div>
+    <div class="rounded-2xl bg-blanco p-5 shadow-sm">
+      <p class="font-nav text-[11px] font-bold uppercase tracking-wider text-texto-claro">Conversión del checkout</p>
+      <p class="mt-1 font-titulo text-3xl font-bold text-verde-oscuro">{% if conversion is None %}—{% else %}{{ conversion }} %{% endif %}</p>
+      <p class="mt-1 text-sm text-texto-claro">De {{ total_creados }} pedido{{ total_creados|pluralize }} creados, cuántos se pagaron</p>
+    </div>
+    <div class="rounded-2xl bg-blanco p-5 shadow-sm">
+      <p class="font-nav text-[11px] font-bold uppercase tracking-wider text-texto-claro">Checkouts abandonados</p>
+      <p class="mt-1 font-titulo text-3xl font-bold text-verde-oscuro">{{ abandonados_n }}</p>
+      <p class="mt-1 text-sm text-texto-claro">{{ abandonados_valor|cop }} sin cobrar · {{ rechazados_n }} rechazado{{ rechazados_n|pluralize }}</p>
+    </div>
+    <div class="rounded-2xl bg-blanco p-5 shadow-sm">
+      <p class="font-nav text-[11px] font-bold uppercase tracking-wider text-texto-claro">Clientes</p>
+      <p class="mt-1 font-titulo text-3xl font-bold text-verde-oscuro">{{ total_clientes }}</p>
+      <p class="mt-1 text-sm text-texto-claro">{{ recurrentes }} han repetido compra</p>
+    </div>
+  </div>
+
+  {# Gráfica: una sola serie (ingresos por día) #}
+  <div class="mt-4 rounded-2xl bg-blanco p-5 shadow-sm">
+    <h3 class="font-nav text-[11px] font-bold uppercase tracking-wider text-texto-claro">Ingresos por día</h3>
+    {% if serie_tiene_ventas %}
+    <div class="relative mt-8 flex h-52 items-end gap-0.5 border-b border-beige" role="img" aria-label="Ingresos por día; el detalle está en la tabla de abajo">
+      {% for d in serie %}
+      <div class="group relative flex h-full flex-1 items-end rounded-t hover:bg-off-white focus:bg-off-white outline-none" tabindex="0">
+        <div class="w-full rounded-t-[4px] bg-[#C5562A]" style="height:{{ d.altura|stringformat:'s' }}%"></div>
+        {% if d.es_max %}<span class="pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] text-texto-claro" style="bottom:calc({{ d.altura|stringformat:'s' }}% + 4px)">{{ d.ingresos|cop }}</span>{% endif %}
+        <span class="pointer-events-none absolute -top-9 left-1/2 z-10 hidden -translate-x-1/2 whitespace-nowrap rounded-lg bg-verde-oscuro px-2.5 py-1.5 text-xs text-crema shadow-lg group-hover:block group-focus:block">{{ d.dia|date:"D j M" }} · {{ d.ingresos|cop }} · {{ d.pedidos }} pedido{{ d.pedidos|pluralize }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="mt-2 flex justify-between text-xs text-texto-claro"><span>{{ desde|date:"j M" }}</span><span>{{ hoy|date:"j M" }}</span></div>
+    {% else %}
+    <p class="py-12 text-center text-sm text-texto-claro">Todavía no hay ventas pagadas en este periodo.</p>
+    {% endif %}
+    <details class="mt-3">
+      <summary class="cursor-pointer text-sm font-bold text-verde-oscuro hover:text-naranja-oscuro">Ver como tabla</summary>
+      <table class="mt-2 w-full text-sm">
+        <thead><tr class="text-left font-nav text-[11px] uppercase tracking-wider text-texto-claro"><th class="py-2">Día</th><th class="py-2 text-right">Pedidos</th><th class="py-2 text-right">Ingresos</th></tr></thead>
+        <tbody class="divide-y divide-beige/50">
+          {% for d in serie reversed %}{% if d.pedidos %}
+          <tr><td class="py-2">{{ d.dia|date:"l j \d\e F"|lower }}</td><td class="py-2 text-right tabular-nums">{{ d.pedidos }}</td><td class="py-2 text-right tabular-nums">{{ d.ingresos|cop }}</td></tr>
+          {% endif %}{% endfor %}
+          {% if not serie_tiene_ventas %}<tr><td colspan="3" class="py-2 text-texto-claro">Sin ventas.</td></tr>{% endif %}
+        </tbody>
+      </table>
+    </details>
+  </div>
+</section>
+
+{# ── Por enviar ── #}
+<section class="mt-10" aria-labelledby="t-enviar">
+  <div class="flex flex-wrap items-end justify-between gap-2">
+    <div>
+      <h2 id="t-enviar" class="font-titulo text-xl font-bold text-verde-oscuro">Pagados por enviar</h2>
+      <p class="text-sm text-texto-claro">Los más antiguos primero.</p>
+    </div>
+    {% if por_enviar_total %}<a href="{% url 'panel:pedidos' %}?estado=pagado" class="text-sm font-bold text-verde-oscuro hover:text-naranja-oscuro">Ver todos →</a>{% endif %}
+  </div>
+  <div class="mt-4 overflow-x-auto rounded-2xl bg-blanco shadow-sm">
+    <table class="w-full text-sm">
+      <thead class="bg-crema/40"><tr class="text-left font-nav text-[11px] uppercase tracking-wider text-verde-oscuro">
+        <th class="px-4 py-3">Pedido</th><th class="px-4 py-3">Cliente</th><th class="px-4 py-3">Destino</th><th class="px-4 py-3 text-right">Total</th><th class="px-4 py-3">Esperando</th>
+      </tr></thead>
+      <tbody class="divide-y divide-beige/50">
+        {% for o in por_enviar|slice:":10" %}
+        <tr class="hover:bg-off-white">
+          <td class="px-4 py-3"><a href="{% url 'panel:pedido' o.pk %}" class="font-bold text-verde-oscuro underline decoration-naranja/40 hover:text-naranja-oscuro">{{ o.number }}</a></td>
+          <td class="px-4 py-3">{{ o.full_name }}</td>
+          <td class="px-4 py-3">{{ o.city }}, {{ o.department }}</td>
+          <td class="px-4 py-3 text-right tabular-nums">{{ o.total|cop }}</td>
+          <td class="px-4 py-3"><span class="rounded-full px-2.5 py-1 text-xs font-bold {% if o.dias_esperando >= 2 %}bg-melon text-rojo-vino{% else %}bg-surface-dim text-texto{% endif %}">{% if o.dias_esperando == 0 %}hoy{% else %}{{ o.dias_esperando }} día{{ o.dias_esperando|pluralize }}{% endif %}</span></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="px-4 py-6 text-center text-texto-claro">✅ No hay pedidos pagados pendientes de envío.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+{# ── Tablas del periodo ── #}
+<div class="mt-10 grid gap-6 lg:grid-cols-2">
+  {% include "panel/_tabla.html" with titulo="Productos más vendidos" filas=top_productos tipo="productos" %}
+  {% include "panel/_tabla.html" with titulo="Tamaños y moliendas" filas=top_presentaciones tipo="presentaciones" %}
+  {% include "panel/_tabla.html" with titulo="Ventas por departamento" filas=por_departamento tipo="departamentos" %}
+  {% include "panel/_tabla.html" with titulo="Ciudades con más pedidos" filas=por_ciudad tipo="ciudades" %}
+</div>
+
+{# ── Estados y abandonados ── #}
+<div class="mt-10 grid gap-6 lg:grid-cols-3">
+  <section class="rounded-2xl bg-blanco p-5 shadow-sm">
+    <h2 class="font-titulo text-lg font-bold text-verde-oscuro">Pedidos por estado</h2>
+    <ul class="mt-3 divide-y divide-beige/50 text-sm">
+      {% for e in por_estado %}
+      <li class="flex justify-between py-2"><a href="{% url 'panel:pedidos' %}?estado={{ e.codigo }}" class="hover:text-naranja-oscuro">{{ e.nombre }}</a><span class="tabular-nums font-bold">{{ e.n }}</span></li>
+      {% endfor %}
+      <li class="flex justify-between py-2 font-bold text-verde-oscuro"><span>Total</span><span class="tabular-nums">{{ total_creados }}</span></li>
+    </ul>
+  </section>
+  <section class="rounded-2xl bg-blanco p-5 shadow-sm lg:col-span-2">
+    <h2 class="font-titulo text-lg font-bold text-verde-oscuro">Checkouts abandonados recientes</h2>
+    <p class="text-sm text-texto-claro">Llenaron sus datos y no pagaron (hace más de 1 hora). Escríbeles para ayudarles a terminar.</p>
+    <ul class="mt-3 divide-y divide-beige/50 text-sm">
+      {% for o in ultimos_abandonados %}
+      <li class="flex flex-wrap items-center justify-between gap-2 py-2.5">
+        <span><a href="{% url 'panel:pedido' o.pk %}" class="font-bold text-verde-oscuro hover:text-naranja-oscuro">{{ o.number }}</a> · {{ o.full_name }} <span class="text-texto-claro">· {{ o.created_at|date:"j M, g:i a" }}</span></span>
+        <span class="tabular-nums">{{ o.total|cop }}</span>
+      </li>
+      {% empty %}
+      <li class="py-4 text-texto-claro">No hay checkouts abandonados en el periodo.</li>
+      {% endfor %}
+    </ul>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+{# Tienda (equivale a src/app/tienda/page.tsx + CatalogGrid.tsx) #}
+
+{% block title %}Tienda — Viati Café{% endblock %}
+{% block description %}Explora nuestra colección de cafés de especialidad colombianos. Café de origen de Boyacá y Santander, directo de la finca a tu taza.{% endblock %}
+{% block og_title %}Tienda | Viati Café{% endblock %}
+{% block og_description %}Café de especialidad colombiano. Compra café de origen directamente de nuestras fincas en Boyacá y Santander.{% endblock %}
+
+{% block content %}
+<section class="relative py-20 md:py-28 overflow-hidden">
+  <div class="grain-overlay"></div>
+  <div class="container-viati relative z-10">
+    <div class="relative mb-12">
+      <span class="text-naranja font-titulo font-bold text-7xl md:text-8xl leading-none opacity-10 absolute -top-6 -left-2 select-none pointer-events-none">
+        02
+      </span>
+      <span class="section-tag relative">Nuestra Tienda</span>
+      <h1 class="font-titulo font-bold text-verde-oscuro text-3xl md:text-4xl relative">
+        Café de Especialidad
+      </h1>
+      <p class="text-texto-claro font-cuerpo mt-2 max-w-2xl relative">
+        Cafés de origen colombiano seleccionados cuidadosamente. Desde
+        Boyacá y Santander directo a tu taza.
+      </p>
+    </div>
+
+    <div data-catalog>
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 pb-8 border-b border-beige/20">
+        <div class="flex gap-2 flex-wrap">
+          {% for cat in categories %}
+          <button type="button" data-category-btn data-category="{{ cat }}"
+                  class="px-4 py-1.5 rounded-full text-xs font-nav font-bold uppercase tracking-wider transition-viati {% if forloop.first %}bg-verde-oscuro text-crema shadow-sm shadow-verde-oscuro/20{% else %}bg-beige/30 text-verde-oscuro hover:bg-beige/60{% endif %}">
+            {{ cat }}
+          </button>
+          {% endfor %}
+        </div>
+
+        <div class="flex items-center gap-2">
+          <label for="sort-select" class="text-xs font-nav font-bold uppercase tracking-wider text-texto-claro/80">
+            Ordenar
+          </label>
+          <select id="sort-select" data-sort-select
+                  class="bg-off-white border border-beige/40 text-verde-oscuro text-sm font-cuerpo rounded-full px-4 py-1.5 pr-8 appearance-none transition-viati hover:border-beige focus:border-naranja focus:outline-none cursor-pointer"
+                  style="background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23293E31' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E&quot;); background-repeat: no-repeat; background-position: right 12px center;">
+            <option value="default" selected>Destacados</option>
+            <option value="price-asc">Precio: menor a mayor</option>
+            <option value="price-desc">Precio: mayor a menor</option>
+            <option value="name-asc">Nombre A-Z</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5" data-catalog-grid {% if not products %}hidden{% endif %}>
+        {% for product in products %}
+        <div data-catalog-item data-category="{{ product.category }}" data-price="{{ product.base_price }}"
+             data-name="{{ product.name }}" data-featured="{% if product.featured %}1{% else %}0{% endif %}">
+          {% include "tienda/_product_card.html" with product=product card_class="w-full" %}
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="text-center py-16" data-catalog-empty {% if products %}hidden{% endif %}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-12 h-12 mx-auto mb-4 text-beige">
+          <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+          <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+          <line x1="6" y1="1" x2="6" y2="4" />
+          <line x1="10" y1="1" x2="10" y2="4" />
+          <line x1="14" y1="1" x2="14" y2="4" />
+        </svg>
+        <p class="font-cuerpo text-texto-claro/80 text-sm">
+          No hay productos en esta categoría.
+        </p>
+      </div>
+
+      <div class="mt-8 text-center text-texto-claro/60 font-cuerpo text-xs">
+        <span data-catalog-count>{{ products|length }}</span> de {{ products|length }} productos
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/tienda.js' %}" defer></script>
+{% endblock %}
